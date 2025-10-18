@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Guess Who: Plants vs Zombies</title>
-
   <style>
     @font-face {
       font-family: 'PVZ';
@@ -46,7 +45,7 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 16px;
     }
 
     select {
@@ -98,17 +97,18 @@
       text-align: center;
       font-size: 22px;
       color: #e8f5e9;
-      margin-top: 0;
+      margin-top: 2px;
+      margin-bottom: 2px ;
     }
 
     .info-detail p {
-      font-size: 18px;
+      font-size: 16px;
       margin: 5px 0;
       color: #e0f2f1;
     }
 
     button {
-      background: linear-gradient(90deg, #4caf50, #81c784);
+      background: linear-gradient(90deg, #22b127, #4d734f);      
       color: white;
       border: none;
       padding: 10px 25px;
@@ -116,7 +116,7 @@
       cursor: pointer;
       font-weight: bold;
       transition: 0.3s;
-      margin: 10px;
+      margin-top: 20px;
       box-shadow: 0 0 10px rgba(50, 200, 50, 0.4);
     }
 
@@ -127,10 +127,9 @@
     }
 
     .board {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 140px)); /* <- tetap ukuran fix */
-    justify-content: center; /* supaya rata tengah */
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 140px));
+      justify-content: center;
       gap: 20px;
       padding: 20px;
       max-width: 1200px;
@@ -176,28 +175,68 @@
       color: #e0f2f1;
     }
 
-   /* 📱 Responsive untuk HP atau layar kecil */
     @media (max-width: 600px) {
-    /* --- Tambahan dari sebelumnya --- */
+        h1 {
+            font-size: 22px;
+            padding: 15px;
+        }
+
         .board {
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 16px;
             padding: 15px;
         }
 
-        .card {
-            transform: scale(1); /* 🔹 memperbesar card di HP */
+        .info-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 25px auto;
+          background: rgba(60, 120, 60, 0.7);
+          border: 2px solid rgba(255,255,255,0.3);
+          border-radius: 20px;
+          box-shadow: 0 0 20px rgba(0, 100, 0, 0.5);
+          width: 85%;
+          max-width: 900px;
+          padding: 25px;
+          flex-wrap: wrap;
+        }
+
+        .info-img img {
+          width: 150px;
+          height: 150px;
+          border-radius: 10px;
+          object-fit: cover;
+          box-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .info-content {
+          flex: 2;
+          text-align: left;
+          margin-left: 20px;
+        }
+
+        .info-content h3 {
+          text-align: center;
+          font-size: 22px;
+          color: #e8f5e9;
+          margin-bottom: 10px;
+        }
+
+        .info-detail p {
+          font-size: 16px;
+          margin: 5px 0;
+          color: #e0f2f1;
         }
 
         .card img {
-            height: 100px; /* 🔹 gambar lebih besar */
+            height: 100px;
         }
 
         .card p {
-            font-size: 16px; /* 🔹 teks sedikit lebih besar */
+            font-size: 16px;
         }
 
-        /* Pastikan card tidak terlalu mepet di sisi layar */
         .board {
             padding-left: 10px;
             padding-right: 10px;
@@ -209,202 +248,217 @@
 <body>
   <h1>GUESS WHO: PLANTS VS ZOMBIES</h1>
 
-  <!-- 🌿 Filter -->
-  
   <div class="info-container">
-      <div class="info-img">
-          <img id="charImg" src="" alt="Karakter">
-        </div>
-        <div class="info-content">
-            <h3>Karakter Kamu</h3>
-            <div class="info-detail">
-                <p>Nama: <span id="charName"></span></p>
-                <p>Jenis: <span id="charType"></span></p>
-                <p>Asal Dunia: <span id="charWorld"></span></p>
-                <p>Harga Matahari: <span id="charSun"></span></p>
-            </div>
-        </div>
+    <div class="info-img">
+      <img id="charImg" src="" alt="Karakter">
     </div>
-
-    <div class="filter-container">
-      <select id="typeFilter" onchange="applyFilter()">
-        <option value="">Semua Jenis</option>
-        <option value="Plant">Plant</option>
-        <option value="Zombie">Zombie</option>
-      </select>
+    <div class="info-content">
+      <h3>Karakter Kamu</h3>
+      <div class="info-detail">
+        <p>Nama: <span id="charName"></span></p>
+        <p>Jenis: <span id="charType"></span></p>
+        <p>Worlds: <span id="charWorld"></span></p>
+        <p>Size: <span id="charSize"></span></p>
+        <p>Speed: <span id="charSpeed"></span></p>
+      </div>
+    </div>
+  </div>
   
-      <select id="worldFilter" onchange="applyFilter()">
-        <option value="">Semua Dunia</option>
-        <option value="Lawn">Lawn</option>
-        <option value="Night">Night</option>
-        <option value="Pool">Pool</option>
-        <option value="Fog">Fog</option>
-        <option value="Roof">Roof</option>
-        <option value="All Worlds">All Worlds</option>
-      </select>
-    </div>
+  <!-- 🌿 Filter -->
+  <div class="filter-container">
+    <select id="typeFilter" onchange="applyFilter()">
+      <option value="">Semua Jenis</option>
+      <option value="Plant">Plant</option>
+      <option value="Zombie">Zombie</option>
+    </select>
+    
+    <select id="worldFilter" onchange="applyFilter()">
+      <option value="">Semua Dunia</option>
+      <option value="Lawn">Lawn</option>
+      <option value="Night">Night</option>
+      <option value="Pool">Pool</option>
+      <option value="Fog">Fog</option>
+      <option value="Roof">Roof</option>
+      <option value="All Worlds">All Worlds</option>
+    </select>
 
-  <button onclick="generateCharacter()">Mulai Ulang (RNG)</button>
+    <select id="sizeFilter" onchange="applyFilter()">
+      <option value="">Semua Size</option>
+      <option value="Small">Small</option>
+      <option value="Medium">Medium</option>
+      <option value="Large">Large</option>
+      <option value="Huge">Huge</option>
+    </select>
+
+    <select id="speedFilter" onchange="applyFilter()">
+      <option value="">Semua Speed</option>
+      <option value="Instant">Instant</option>
+      <option value="Passive">Passive</option>
+      <option value="Slow">Slow</option>
+      <option value="Normal">Normal</option>
+      <option value="Fast">Fast</option>
+      <option value="Very Fast">Very Fast</option>
+      <option value="Very Slow">Very Slow</option>
+    </select>
+  </div>
+    
+  <div>
+    <button onclick="generateCharacter()">Mulai Ulang (RNG)</button>
+  </div>
+  
   <div id="count"></div>
-
   <div class="board" id="board"></div>
 
   <script>
-    const characters = [
-    // 🌱 Lawn Plants
-         {name:"Peashooter", type:"Plant", world:"Lawn", sun:"100", image:"Peashooter1.webp"},
-      {name:"Sunflower", type:"Plant", world:"Lawn", sun:"50", image:"Sunflower1.webp"},
-      {name:"Wall-nut", type:"Plant", world:"Lawn", sun:"50", image:"Wall-nut1.webp"},
-      {name:"Cherry Bomb", type:"Plant", world:"Lawn", sun:"150", image:"Cherry_Bomb1.webp"},
-      {name:"Repeater", type:"Plant", world:"Lawn", sun:"200", image:"Repeater1.webp"},
-      {name:"Puff-shroom", type:"Plant", world:"Night", sun:"0", image:"Puff-shroom1.webp"},
-      {name:"Sun-shroom", type:"Plant", world:"Night", sun:"25", image:"Sun-shroom1.webp"},
-      {name:"Fume-shroom", type:"Plant", world:"Night", sun:"75", image:"Fume-shroom1.webp"},
-      {name:"Grave Buster", type:"Plant", world:"Night", sun:"75", image:"Grave_Buster1.webp"},
-      {name:"Hypno-shroom", type:"Plant", world:"Night", sun:"75", image:"Hypno-shroom1.webp"},
-      {name:"Scaredy-shroom", type:"Plant", world:"Night", sun:"25", image:"Scaredy-shroom1.webp"},
-      {name:"Ice-shroom", type:"Plant", world:"Night", sun:"75", image:"Ice-shroom1.webp"},
-      {name:"Doom-shroom", type:"Plant", world:"Night", sun:"125", image:"Doom-shroom1.webp"},
-      {name:"Snow Pea", type:"Plant", world:"Lawn", sun:"175", image:"Snow_Pea1.webp"},
-      {name:"Chomper", type:"Plant", world:"Lawn", sun:"150", image:"Chomper1.webp"},
-      {name:"Split Pea", type:"Plant", world:"Pool", sun:"125", image:"Split_Pea1.webp"},
-      {name:"Starfruit", type:"Plant", world:"Pool", sun:"125", image:"Starfruit1.webp"},
-      {name:"Tall-nut", type:"Plant", world:"Pool", sun:"125", image:"Tall-nut1.webp"},
-      {name:"Sea-shroom", type:"Plant", world:"Fog", sun:"0", image:"Sea-shroom1.webp"},
-      {name:"Tangle Kelp", type:"Plant", world:"Pool", sun:"25", image:"Tangle_Kelp1.webp"},
-      {name:"Jalapeno", type:"Plant", world:"Lawn", sun:"125", image:"Jalapeno1.webp"},
-      {name:"Spikeweed", type:"Plant", world:"Lawn", sun:"100", image:"Spikeweed1.webp"},
-      {name:"Spikerock", type:"Plant", world:"Roof", sun:"125", image:"Spikerock1.webp"},
-      {name:"Torchwood", type:"Plant", world:"Lawn", sun:"175", image:"Torchwood1.webp"},
-      {name:"Threepeater", type:"Plant", world:"Lawn", sun:"325", image:"Threepeater1.webp"},
-      {name:"Cabbage-pult", type:"Plant", world:"Roof", sun:"100", image:"Cabbage-pult1.png"},
-      {name:"Kernel-pult", type:"Plant", world:"Roof", sun:"100", image:"Kernel-pult1.webp"},
-      {name:"Melon-pult", type:"Plant", world:"Roof", sun:"300", image:"Melon-pult1.webp"},
-      {name:"Cob Cannon", type:"Plant", world:"Roof", sun:"500", image:"Cob_Cannon1.webp"},
-      {name:"Flower Pot", type:"Plant", world:"Roof", sun:"25", image:"Flower_Pot1.webp"},
-      {name:"Plantern", type:"Plant", world:"Fog", sun:"25", image:"Plantern1.webp"},
-      {name:"Cactus", type:"Plant", world:"Fog", sun:"125", image:"Cactus1.webp"},
-      {name:"Blover", type:"Plant", world:"Fog", sun:"100", image:"Blover1.webp"},
-      {name:"Pumpkin", type:"Plant", world:"Night", sun:"125", image:"Pumpkin1.webp"},
-      {name:"Magnet-shroom", type:"Plant", world:"Night", sun:"100", image:"Magnet-shroom1.webp"},
-      {name:"Gold Magnet", type:"Plant", world:"Night", sun:"50", image:"Gold_Magnet1.webp"},
-      {name:"Coffee Bean", type:"Plant", world:"Night", sun:"75", image:"Coffee_Bean1.webp"},
-      {name:"Garlic", type:"Plant", world:"Pool", sun:"50", image:"Garlic1.webp"},
-      {name:"Marigold", type:"Plant", world:"Lawn", sun:"50", image:"Marigold1.webp"},
-      {name:"Imitater", type:"Plant", world:"All Worlds", sun:"-", image:"Imitater1.webp"},
-      {name:"Twin Sunflower", type:"Plant", world:"Lawn", sun:"150", image:"Twin_Sunflower1.webp"},
-      {name:"Gloom-shroom", type:"Plant", world:"Night", sun:"150", image:"Gloom-shroom1.webp"},
-      {name:"Explode-o-nut", type:"Plant", world:"Lawn", sun:"-", image:"Explode-o-nut1.webp"},
-      {name:"Giant Sunflower", type:"Plant", world:"Lawn", sun:"-", image:"Giant_Sunflower1.webp"},
-      {name:"Giant Wall-nut", type:"Plant", world:"Lawn", sun:"-", image:"Giant_Wall-nut1.webp"},
-      {name:"Giant Marigold", type:"Plant", world:"Lawn", sun:"-", image:"Giant_Marigold1.webp"},
-      {name:"Sun-shroom", type:"Plant", world:"Night", sun:"25", image:"Sun-shroom1.webp"},
-      {name:"Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Zombie1.webp"},
-      {name:"Conehead Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Conehead_Zombie1.webp"},
-      {name:"Buckethead Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Buckethead_Zombie1.webp"},
-      {name:"Flag Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Flag_Zombie1.webp"},
-      {name:"Pole Vaulting Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Pole_Vaulting_Zombie1.webp"},
-      {name:"Newspaper Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Newspaper_Zombie1.webp"},
-      {name:"Football Zombie", type:"Zombie", world:"Night", sun:"-", image:"Football_Zombie1.webp"},
-      {name:"Screen Door Zombie", type:"Zombie", world:"Night", sun:"-", image:"Screen_Door_Zombie1.webp"},
-      {name:"Dancing Zombie", type:"Zombie", world:"Night", sun:"-", image:"Dancing_ZombieOld.webp"},
-      {name:"Backup Dancer", type:"Zombie", world:"Night", sun:"-", image:"Backup_DancerOld.webp"},
-      {name:"Ducky Tube Zombie", type:"Zombie", world:"Pool", sun:"-", image:"Ducky_Tube_Zombie1.webp"},
-      {name:"Snorkel Zombie", type:"Zombie", world:"Pool", sun:"-", image:"Snorkel_Zombie1.webp"},
-      {name:"Zomboni", type:"Zombie", world:"Pool", sun:"-", image:"Zomboni1.webp"},
-      {name:"Bungee Zombie", type:"Zombie", world:"Roof", sun:"-", image:"Bungee_Zombie1.webp"},
-      {name:"Catapult Zombie", type:"Zombie", world:"Roof", sun:"-", image:"Catapult_Zombie1.webp"},
-      {name:"Ladder Zombie", type:"Zombie", world:"Roof", sun:"-", image:"Ladder_Zombie1.webp"},
-      {name:"Dolphin Rider Zombie", type:"Zombie", world:"Pool", sun:"-", image:"Dolphin_Rider_Zombie1.webp"},
-      {name:"Digger Zombie", type:"Zombie", world:"Night", sun:"-", image:"Digger_Zombie1.webp"},
-      {name:"Balloon Zombie", type:"Zombie", world:"Fog", sun:"-", image:"Balloon_Zombie1.webp"},
-      {name:"Pogo Zombie", type:"Zombie", world:"Fog", sun:"-", image:"Pogo_Zombie1.webp"},
-      {name:"Jack-in-the-Box Zombie", type:"Zombie", world:"Night", sun:"-", image:"Jack-in-the-Box_Zombie1.webp"},
-      {name:"Imp", type:"Zombie", world:"Roof", sun:"-", image:"Imp1.webp"},
-      {name:"Zombie Yeti", type:"Zombie", world:"Lawn", sun:"-", image:"Zombie_Yeti1.webp"},
-      {name:"Gargantuar", type:"Zombie", world:"Roof", sun:"-", image:"Gargantuar1.webp"},
-      {name:"Peashooter Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Peashooter_Zombie1.webp"},
-      {name:"Gatling Pea Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Gatling_Pea_Zombie1.webp"},
-      {name:"Jalapeno Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Jalapeno_Zombie1.webp"},
-      {name:"Explode-o-nut Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Wall-nut_Zombie1.webp"},
-      {name:"Zombie Bobsled Team", type:"Zombie", world:"Pool", sun:"-", image:"Zombie_Bobsled_Team1.webp"},
-      {name:"Reverse Repeater", type:"Zombie", world:"Lawn", sun:"-", image:"Reverse_Repeater1.webp"},
-      {name:"Dr. Zomboss", type:"Zombie", world:"Roof", sun:"-", image:"Dr.webp"},
-      {name:"Cattail", type:"Plant", world:"Pool", sun:"225", image:"Cattail1.webp"},
-      {name:"Gatling Pea", type:"Plant", world:"Lawn", sun:"250", image:"Gatling_Pea1.webp"},
-      {name:"Potato Mine", type:"Plant", world:"Lawn", sun:"25", image:"Potato_Mine1.webp"},
-      {name:"Sprout", type:"Plant", world:"All Worlds", sun:"-", image:"Sprout1.webp"},
-      {name:"Squash", type:"Plant", world:"Lawn", sun:"50", image:"Squash1.webp"},
-      {name:"Tree of Wisdom", type:"Plant", world:"All Worlds", sun:"-", image:"Tree_of_Wisdom1.webp"},
-      {name:"Umbrella Leaf", type:"Plant", world:"Roof", sun:"100", image:"Umbrella_Leaf1.webp"},
-      {name:"Winter Melon", type:"Plant", world:"Roof", sun:"200", image:"Winter_Melon1.webp"},
-      {name:"Squash Zombie", type:"Zombie", world:"Lawn", sun:"-", image:"Squash_Zombie1.webp"},
-      {name:"Tall-nut Zombie", type:"Zombie", world:"Pool", sun:"-", image:"Tall-nut_Zombie1.webp"},
-    ];// pakai data kamu yang sudah lengkap
+ const characters = [
+    {name:"Peashooter", type:"Plant", world:"Lawn", size:"Medium", range:"Ranged", speed:"Normal", image:"Peashooter1.webp"},
+    {name:"Sunflower", type:"Plant", world:"Lawn", size:"Small", range:"Support", speed:"Normal", image:"Sunflower1.webp"},
+    {name:"Wall-nut", type:"Plant", world:"Lawn", size:"Large", range:"None", speed:"Slow", image:"Wall-nut1.webp"},
+    {name:"Cherry Bomb", type:"Plant", world:"Lawn", size:"Medium", range:"Explosive", speed:"Instant", image:"Cherry_Bomb1.webp"},
+    {name:"Repeater", type:"Plant", world:"Lawn", size:"Medium", range:"Ranged", speed:"Normal", image:"Repeater1.webp"},
+    {name:"Puff-shroom", type:"Plant", world:"Night", size:"Small", range:"Short", speed:"Fast", image:"Puff-shroom1.webp"},
+    {name:"Sun-shroom", type:"Plant", world:"Night", size:"Small", range:"Support", speed:"Normal", image:"Sun-shroom1.webp"},
+    {name:"Fume-shroom", type:"Plant", world:"Night", size:"Medium", range:"Short", speed:"Normal", image:"Fume-shroom1.webp"},
+    {name:"Grave Buster", type:"Plant", world:"Night", size:"Medium", range:"Utility", speed:"Slow", image:"Grave_Buster1.webp"},
+    {name:"Hypno-shroom", type:"Plant", world:"Night", size:"Small", range:"Utility", speed:"Instant", image:"Hypno-shroom1.webp"},
+    {name:"Scaredy-shroom", type:"Plant", world:"Night", size:"Small", range:"Ranged", speed:"Normal", image:"Scaredy-shroom1.webp"},
+    {name:"Ice-shroom", type:"Plant", world:"Night", size:"Medium", range:"Full", speed:"Instant", image:"Ice-shroom1.webp"},
+    {name:"Doom-shroom", type:"Plant", world:"Night", size:"Large", range:"Explosive", speed:"Instant", image:"Doom-shroom1.webp"},
+    {name:"Snow Pea", type:"Plant", world:"Lawn", size:"Medium", range:"Ranged", speed:"Normal", image:"Snow_Pea1.webp"},
+    {name:"Chomper", type:"Plant", world:"Lawn", size:"Large", range:"Melee", speed:"Slow", image:"Chomper1.webp"},
+    {name:"Split Pea", type:"Plant", world:"Pool", size:"Medium", range:"Ranged", speed:"Normal", image:"Split_Pea1.webp"},
+    {name:"Starfruit", type:"Plant", world:"Pool", size:"Medium", range:"Multi", speed:"Normal", image:"Starfruit1.webp"},
+    {name:"Tall-nut", type:"Plant", world:"Pool", size:"Large", range:"None", speed:"Very Slow", image:"Tall-nut1.webp"},
+    {name:"Sea-shroom", type:"Plant", world:"Fog", size:"Small", range:"Short", speed:"Fast", image:"Sea-shroom1.webp"},
+    {name:"Tangle Kelp", type:"Plant", world:"Pool", size:"Medium", range:"Melee", speed:"Instant", image:"Tangle_Kelp1.webp"},
+    {name:"Jalapeno", type:"Plant", world:"Lawn", size:"Medium", range:"Explosive", speed:"Instant", image:"Jalapeno1.webp"},
+    {name:"Spikeweed", type:"Plant", world:"Lawn", size:"Small", range:"Ground", speed:"Passive", image:"Spikeweed1.webp"},
+    {name:"Spikerock", type:"Plant", world:"Roof", size:"Small", range:"Ground", speed:"Passive", image:"Spikerock1.webp"},
+    {name:"Torchwood", type:"Plant", world:"Lawn", size:"Medium", range:"Support", speed:"Passive", image:"Torchwood1.webp"},
+    {name:"Threepeater", type:"Plant", world:"Lawn", size:"Medium", range:"Ranged", speed:"Normal", image:"Threepeater1.webp"},
+    {name:"Cabbage-pult", type:"Plant", world:"Roof", size:"Medium", range:"Ranged", speed:"Normal", image:"Cabbage-pult1.png"},
+    {name:"Kernel-pult", type:"Plant", world:"Roof", size:"Medium", range:"Ranged", speed:"Normal", image:"Kernel-pult1.webp"},
+    {name:"Melon-pult", type:"Plant", world:"Roof", size:"Large", range:"Ranged", speed:"Normal", image:"Melon-pult1.webp"},
+    {name:"Cob Cannon", type:"Plant", world:"Roof", size:"Large", range:"Explosive", speed:"Slow", image:"Cob_Cannon1.webp"},
+    {name:"Flower Pot", type:"Plant", world:"Roof", size:"Small", range:"Support", speed:"Passive", image:"Flower_Pot1.webp"},
+    {name:"Plantern", type:"Plant", world:"Fog", size:"Small", range:"Utility", speed:"Passive", image:"Plantern1.webp"},
+    {name:"Cactus", type:"Plant", world:"Fog", size:"Medium", range:"Ranged", speed:"Normal", image:"Cactus1.webp"},
+    {name:"Blover", type:"Plant", world:"Fog", size:"Medium", range:"Full", speed:"Instant", image:"Blover1.webp"},
+    {name:"Pumpkin", type:"Plant", world:"Night", size:"Medium", range:"Defense", speed:"Passive", image:"Pumpkin1.webp"},
+    {name:"Magnet-shroom", type:"Plant", world:"Night", size:"Medium", range:"Utility", speed:"Normal", image:"Magnet-shroom1.webp"},
+    {name:"Gold Magnet", type:"Plant", world:"Night", size:"Medium", range:"Utility", speed:"Normal", image:"Gold_Magnet1.webp"},
+    {name:"Coffee Bean", type:"Plant", world:"Night", size:"Small", range:"Utility", speed:"Instant", image:"Coffee_Bean1.webp"},
+    {name:"Garlic", type:"Plant", world:"Pool", size:"Small", range:"Defense", speed:"Passive", image:"Garlic1.webp"},
+    {name:"Marigold", type:"Plant", world:"Lawn", size:"Small", range:"Support", speed:"Normal", image:"Marigold1.webp"},
+    {name:"Imitater", type:"Plant", world:"All Worlds", size:"Variable", range:"Mimic", speed:"Normal", image:"Imitater1.webp"},
+    {name:"Twin Sunflower", type:"Plant", world:"Lawn", size:"Small", range:"Support", speed:"Normal", image:"Twin_Sunflower1.webp"},
+    {name:"Gloom-shroom", type:"Plant", world:"Night", size:"Medium", range:"Area", speed:"Fast", image:"Gloom-shroom1.webp"},
+    {name:"Explode-o-nut", type:"Plant", world:"Lawn", size:"Large", range:"Explosive", speed:"Instant", image:"Explode-o-nut1.webp"},
+    {name:"Giant Sunflower", type:"Plant", world:"Lawn", size:"Large", range:"Support", speed:"Normal", image:"Giant_Sunflower1.webp"},
+    {name:"Giant Wall-nut", type:"Plant", world:"Lawn", size:"Huge", range:"None", speed:"Very Slow", image:"Giant_Wall-nut1.webp"},
+    {name:"Giant Marigold", type:"Plant", world:"Lawn", size:"Large", range:"Support", speed:"Normal", image:"Giant_Marigold1.webp"},
+    {name:"Cattail", type:"Plant", world:"Pool", size:"Medium", range:"Ranged", speed:"Fast", image:"Cattail1.webp"},
+    {name:"Gatling Pea", type:"Plant", world:"Lawn", size:"Medium", range:"Ranged", speed:"Fast", image:"Gatling_Pea1.webp"},
+    {name:"Potato Mine", type:"Plant", world:"Lawn", size:"Small", range:"Melee", speed:"Slow", image:"Potato_Mine1.webp"},
+    {name:"Squash", type:"Plant", world:"Lawn", size:"Medium", range:"Melee", speed:"Instant", image:"Squash1.webp"},
+    {name:"Tree of Wisdom", type:"Plant", world:"All Worlds", size:"Huge", range:"Support", speed:"Passive", image:"Tree_of_Wisdom1.webp"},
+    {name:"Umbrella Leaf", type:"Plant", world:"Roof", size:"Medium", range:"Defense", speed:"Passive", image:"Umbrella_Leaf1.webp"},
+    {name:"Winter Melon", type:"Plant", world:"Roof", size:"Large", range:"Ranged", speed:"Normal", image:"Winter_Melon1.webp"},
+    {name:"Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Melee", speed:"Slow", image:"Zombie1.webp"},
+    {name:"Conehead Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Melee", speed:"Slow", image:"Conehead_Zombie1.webp"},
+    {name:"Buckethead Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Melee", speed:"Slow", image:"Buckethead_Zombie1.webp"},
+    {name:"Flag Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Melee", speed:"Normal", image:"Flag_Zombie1.webp"},
+    {name:"Pole Vaulting Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Melee", speed:"Fast", image:"Pole_Vaulting_Zombie1.webp"},
+    {name:"Newspaper Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Melee", speed:"Slow", image:"Newspaper_Zombie1.webp"},
+    {name:"Football Zombie", type:"Zombie", world:"Night", size:"Large", range:"Melee", speed:"Fast", image:"Football_Zombie1.webp"},
+    {name:"Screen Door Zombie", type:"Zombie", world:"Night", size:"Medium", range:"Melee", speed:"Slow", image:"Screen_Door_Zombie1.webp"},
+    {name:"Dancing Zombie", type:"Zombie", world:"Night", size:"Medium", range:"Summoner", speed:"Normal", image:"Dancing_ZombieOld.webp"},
+    {name:"Backup Dancer", type:"Zombie", world:"Night", size:"Medium", range:"Melee", speed:"Normal", image:"Backup_DancerOld.webp"},
+    {name:"Ducky Tube Zombie", type:"Zombie", world:"Pool", size:"Medium", range:"Melee", speed:"Normal", image:"Ducky_Tube_Zombie1.webp"},
+    {name:"Snorkel Zombie", type:"Zombie", world:"Pool", size:"Medium", range:"Melee", speed:"Fast", image:"Snorkel_Zombie1.webp"},
+    {name:"Zomboni", type:"Zombie", world:"Pool", size:"Large", range:"Vehicle", speed:"Normal", image:"Zomboni1.webp"},
+    {name:"Bungee Zombie", type:"Zombie", world:"Roof", size:"Medium", range:"Air", speed:"Fast", image:"Bungee_Zombie1.webp"},
+    {name:"Catapult Zombie", type:"Zombie", world:"Roof", size:"Large", range:"Ranged", speed:"Slow", image:"Catapult_Zombie1.webp"},
+    {name:"Ladder Zombie", type:"Zombie", world:"Roof", size:"Medium", range:"Utility", speed:"Normal", image:"Ladder_Zombie1.webp"},
+    {name:"Dolphin Rider Zombie", type:"Zombie", world:"Pool", size:"Medium", range:"Melee", speed:"Fast", image:"Dolphin_Rider_Zombie1.webp"},
+    {name:"Digger Zombie", type:"Zombie", world:"Night", size:"Medium", range:"Melee", speed:"Fast", image:"Digger_Zombie1.webp"},
+    {name:"Balloon Zombie", type:"Zombie", world:"Fog", size:"Medium", range:"Air", speed:"Fast", image:"Balloon_Zombie1.webp"},
+    {name:"Pogo Zombie", type:"Zombie", world:"Fog", size:"Medium", range:"Melee", speed:"Very Fast", image:"Pogo_Zombie1.webp"},
+    {name:"Jack-in-the-Box Zombie", type:"Zombie", world:"Night", size:"Medium", range:"Explosive", speed:"Normal", image:"Jack-in-the-Box_Zombie1.webp"},
+    {name:"Imp", type:"Zombie", world:"Roof", size:"Small", range:"Melee", speed:"Fast", image:"Imp1.webp"},
+    {name:"Zombie Yeti", type:"Zombie", world:"Lawn", size:"Large", range:"Melee", speed:"Normal", image:"Zombie_Yeti1.webp"},
+    {name:"Gargantuar", type:"Zombie", world:"Roof", size:"Huge", range:"Melee", speed:"Slow", image:"Gargantuar1.webp"},
+    {name:"Peashooter Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Ranged", speed:"Normal", image:"Peashooter_Zombie1.webp"},
+    {name:"Gatling Pea Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Ranged", speed:"Fast", image:"Gatling_Pea_Zombie1.webp"},
+    {name:"Jalapeno Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Explosive", speed:"Instant", image:"Jalapeno_Zombie1.webp"},
+    {name:"Explode-o-nut Zombie", type:"Zombie", world:"Lawn", size:"Large", range:"Explosive", speed:"Slow", image:"Wall-nut_Zombie1.webp"},
+    {name:"Zombie Bobsled Team", type:"Zombie", world:"Pool", size:"Medium", range:"Melee", speed:"Fast", image:"Zombie_Bobsled_Team1.webp"},
+    {name:"Reverse Repeater", type:"Zombie", world:"Lawn", size:"Medium", range:"Ranged", speed:"Normal", image:"Reverse_Repeater1.webp"},
+    {name:"Dr. Zomboss", type:"Zombie", world:"Roof", size:"Huge", range:"Boss", speed:"Normal", image:"Dr.webp"},
+    {name:"Squash Zombie", type:"Zombie", world:"Lawn", size:"Large", range:"Melee", speed:"Instant", image:"Squash_Zombie1.webp"},
+    {name:"Tall-nut Zombie", type:"Zombie", world:"Pool", size:"Large", range:"Defense", speed:"Slow", image:"Tall-nut_Zombie1.webp"},
+    {name: "Sprout", type: "Plant", world: "All Worlds", size: "-", speed: "-", image: "Sprout1.webp"},
+    {name: "Sun-shroom", type: "Plant", world: "Night", size: "Small", speed: "Medium", image: "Sun-shroom1.webp"},
+  ];// pakai data kamu yang sudah lengkap
 
-        // 🌱 Menampilkan semua karakter
-        function displayCharacters(list) {
-            const board = document.getElementById("board");
-            board.innerHTML = "";
-            list.forEach(char => {
-            const card = document.createElement("div");
-            card.classList.add("card");
-            card.innerHTML = `
-                <img src="${char.image}" alt="${char.name}">
-                <p>${char.name}</p>
-            `;
-            card.addEventListener("click", () => {
-                card.classList.toggle("eliminated");
-                updateCount();
-            });
-            board.appendChild(card);
-            });
-            updateCount();
-        }
+    // 🌱 Tampilkan karakter
+    function displayCharacters(list) {
+      const board = document.getElementById("board");
+      board.innerHTML = "";
+      list.forEach(char => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.innerHTML = `<img src="${char.image}" alt="${char.name}"><p>${char.name}</p>`;
+        card.addEventListener("click", () => {
+          card.classList.toggle("eliminated");
+          updateCount();
+        });
+        board.appendChild(card);
+      });
+      updateCount();
+    }
 
-        // 🧮 Update jumlah karakter tersisa
-        function updateCount() {
-            const total = document.querySelectorAll(".card").length;
-            const eliminated = document.querySelectorAll(".card.eliminated").length;
-            document.getElementById("count").textContent = `Tersisa: ${total - eliminated} / ${total}`;
-        }
+    // 🧮 Update jumlah karakter tersisa
+    function updateCount() {
+      const total = document.querySelectorAll(".card").length;
+      const eliminated = document.querySelectorAll(".card.eliminated").length;
+      document.getElementById("count").textContent = `Tersisa: ${total - eliminated} / ${total}`;
+    }
 
-        // 🧩 Terapkan filter tanpa menghapus status eliminasi
-        function applyFilter() {
-            const typeValue = document.getElementById("typeFilter").value;
-            const worldValue = document.getElementById("worldFilter").value;
-            const board = document.getElementById("board");
-            const cards = board.querySelectorAll(".card");
+    // 🧩 Filter berdasarkan semua kategori
+    function applyFilter() {
+      const typeValue = document.getElementById("typeFilter").value;
+      const worldValue = document.getElementById("worldFilter").value;
+      const sizeValue = document.getElementById("sizeFilter").value;
+      const speedValue = document.getElementById("speedFilter").value;
+      const cards = document.querySelectorAll(".card");
 
-            cards.forEach(card => {
-            const char = characters.find(c => c.name === card.querySelector("p").textContent);
-            const matchType = typeValue === "" || char.type === typeValue;
-            const matchWorld = worldValue === "" || char.world === worldValue;
-            card.style.display = (matchType && matchWorld) ? "block" : "none";
-            });
+      cards.forEach(card => {
+        const char = characters.find(c => c.name === card.querySelector("p").textContent);
+        const matchType = !typeValue || char.type === typeValue;
+        const matchWorld = !worldValue || char.world === worldValue;
+        const matchSize = !sizeValue || char.size === sizeValue;
+        const matchSpeed = !speedValue || char.speed === speedValue;
+        card.style.display = (matchType && matchWorld && matchSize && matchSpeed) ? "block" : "none";
+      });
 
-            updateCount();
-        }
+      updateCount();
+    }
 
-        // 🎲 Tombol “Mulai Ulang” (reset total)
-        function generateCharacter() {
-            // RNG karakter acak
-            const random = characters[Math.floor(Math.random() * characters.length)];
-            document.getElementById("charImg").src = random.image;
-            document.getElementById("charName").textContent = random.name;
-            document.getElementById("charType").textContent = random.type;
-            document.getElementById("charWorld").textContent = random.world;
-            document.getElementById("charSun").textContent = random.sun;
+    // 🎲 RNG
+    function generateCharacter() {
+      const random = characters[Math.floor(Math.random() * characters.length)];
+      document.getElementById("charImg").src = random.image;
+      document.getElementById("charName").textContent = random.name;
+      document.getElementById("charType").textContent = random.type;
+      document.getElementById("charWorld").textContent = random.world;
+      document.getElementById("charSize").textContent = random.size;
+      document.getElementById("charSpeed").textContent = random.speed;
+      displayCharacters(characters);
+    }
 
-            // Reset semua filter & eliminasi
-            document.getElementById("typeFilter").value = "";
-            document.getElementById("worldFilter").value = "";
-            displayCharacters(characters);
-        }
-
-        // 🚀 Jalankan pertama kali
-        displayCharacters(characters);
-        generateCharacter();
-    </script>
+    displayCharacters(characters);
+    generateCharacter();
+  </script>
 </body>
 </html>
