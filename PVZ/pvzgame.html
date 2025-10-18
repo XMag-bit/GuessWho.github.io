@@ -90,7 +90,7 @@
     .info-content {
       flex: 2;
       text-align: left;
-      margin-left: 20px;
+      margin-left: 24px;
     }
 
     .info-content h3 {
@@ -102,7 +102,7 @@
     }
 
     .info-detail p {
-      font-size: 16px;
+      font-size: 17px;
       margin: 5px 0;
       color: #e0f2f1;
     }
@@ -309,8 +309,8 @@
   <div id="count"></div>
   <div class="board" id="board"></div>
 
-  <script>
- const characters = [
+<script>
+  const characters = [
     {name:"Peashooter", type:"Plant", world:"Lawn", size:"Medium", range:"Ranged", speed:"Normal", image:"Peashooter1.webp"},
     {name:"Sunflower", type:"Plant", world:"Lawn", size:"Small", range:"Support", speed:"Normal", image:"Sunflower1.webp"},
     {name:"Wall-nut", type:"Plant", world:"Lawn", size:"Large", range:"None", speed:"Slow", image:"Wall-nut1.webp"},
@@ -344,6 +344,7 @@
     {name:"Plantern", type:"Plant", world:"Fog", size:"Small", range:"Utility", speed:"Passive", image:"Plantern1.webp"},
     {name:"Cactus", type:"Plant", world:"Fog", size:"Medium", range:"Ranged", speed:"Normal", image:"Cactus1.webp"},
     {name:"Blover", type:"Plant", world:"Fog", size:"Medium", range:"Full", speed:"Instant", image:"Blover1.webp"},
+    {name: "Sprout", type: "Plant", world: "All Worlds", size: "-", speed: "-", image: "Sprout1.webp"},
     {name:"Pumpkin", type:"Plant", world:"Night", size:"Medium", range:"Defense", speed:"Passive", image:"Pumpkin1.webp"},
     {name:"Magnet-shroom", type:"Plant", world:"Night", size:"Medium", range:"Utility", speed:"Normal", image:"Magnet-shroom1.webp"},
     {name:"Gold Magnet", type:"Plant", world:"Night", size:"Medium", range:"Utility", speed:"Normal", image:"Gold_Magnet1.webp"},
@@ -392,13 +393,11 @@
     {name:"Gatling Pea Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Ranged", speed:"Fast", image:"Gatling_Pea_Zombie1.webp"},
     {name:"Jalapeno Zombie", type:"Zombie", world:"Lawn", size:"Medium", range:"Explosive", speed:"Instant", image:"Jalapeno_Zombie1.webp"},
     {name:"Explode-o-nut Zombie", type:"Zombie", world:"Lawn", size:"Large", range:"Explosive", speed:"Slow", image:"Wall-nut_Zombie1.webp"},
+    {name:"Tall-nut Zombie", type:"Zombie", world:"Pool", size:"Large", range:"Defense", speed:"Slow", image:"Tall-nut_Zombie1.webp"},
+    {name:"Squash Zombie", type:"Zombie", world:"Lawn", size:"Large", range:"Melee", speed:"Instant", image:"Squash_Zombie1.webp"},
     {name:"Zombie Bobsled Team", type:"Zombie", world:"Pool", size:"Medium", range:"Melee", speed:"Fast", image:"Zombie_Bobsled_Team1.webp"},
     {name:"Reverse Repeater", type:"Zombie", world:"Lawn", size:"Medium", range:"Ranged", speed:"Normal", image:"Reverse_Repeater1.webp"},
     {name:"Dr. Zomboss", type:"Zombie", world:"Roof", size:"Huge", range:"Boss", speed:"Normal", image:"Dr.webp"},
-    {name:"Squash Zombie", type:"Zombie", world:"Lawn", size:"Large", range:"Melee", speed:"Instant", image:"Squash_Zombie1.webp"},
-    {name:"Tall-nut Zombie", type:"Zombie", world:"Pool", size:"Large", range:"Defense", speed:"Slow", image:"Tall-nut_Zombie1.webp"},
-    {name: "Sprout", type: "Plant", world: "All Worlds", size: "-", speed: "-", image: "Sprout1.webp"},
-    {name: "Sun-shroom", type: "Plant", world: "Night", size: "Small", speed: "Medium", image: "Sun-shroom1.webp"},
   ];// pakai data kamu yang sudah lengkap
 
     // 🌱 Tampilkan karakter
