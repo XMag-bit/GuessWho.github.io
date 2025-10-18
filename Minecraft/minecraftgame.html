@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess Who: Minecraft Edition</title>
+
+  <style>
+    @font-face {
+        font-family: 'Minecraft';
+        src: url('Minecraft.ttf') format('truetype');
+    }
+
+    body {
+        font-family: 'Minecraft', monospace;
+        background: url('Background/Background.webp') repeat;
+        background-size: 64px 64px;
+        margin: 0;
+        color: #fff;
+        text-align: center;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(2px);
+        z-index: -1;
+    }
+
+    h1 {
+        padding: 25px;
+        margin: 0;
+        background: url('Background/BackgroundTitle.webp');
+        color: #ffffff;
+        font-size: 52px;
+        letter-spacing: 3px;
+        text-shadow: 3px 3px 0 #000;
+        border-bottom: 3px solid rgba(255,255,255,0.25);
+    }
+
+    /* === INFO BOX === */
+    .info-container {
+        background: rgba(0, 0, 0, 0.75);
+        border: 3px solid #000;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 30px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .info-img img {
+        width: 200px;
+        height: 200px;
+        image-rendering: pixelated;
+        background: #2e2e2e;
+        border: 3px solid #000;
+    }
+
+    .info-content {
+        margin-left: 30px;
+        text-align: left;
+        flex: 1;
+    }
+
+    .info-content h3 {
+        color: #fff;
+        text-shadow: 3px 3px 0 #000;
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    .info-detail p {
+        color: #fff;
+        text-shadow: 2px 2px 0 #000;
+        font-size: 20px;
+        margin: 10px 0;
+    }
+
+    /* === BUTTON === */
+    button {
+        background: linear-gradient(#6ba04c, #4c7a30);
+        color: #fff;
+        text-shadow: 2px 2px 0 #000;
+        border: 3px solid #000;
+        padding: 16px 32px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: 'Minecraft';
+        font-size: 20px;
+        transition: 0.2s;
+        margin: 15px;
+    }
+
+    button:hover {
+        background: linear-gradient(#8fcf63, #5b9d3e);
+        transform: scale(1.05);
+    }
+
+    /* === SELECT BOX === */
+    select {
+        background: #3b3b3b;
+        border: 2px solid #000;
+        color: #fff;
+        text-shadow: 1px 1px 0 #000;
+        font-family: 'Minecraft';
+        font-size: 16px;
+        padding: 10px 14px;
+        border-radius: 4px;
+        margin: 5px;
+    }
+
+    label {
+        font-size: 16px;
+        color: #fff;
+        text-shadow: 1px 1px 0 #000;
+    }
+
+    /* === BOARD === */
+    .board {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        padding: 25px;
+        width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .card {
+        background: rgba(0, 0, 0, 0.75);
+        border: 3px solid #000;
+        border-radius: 8px;
+        color: #fff;
+        cursor: pointer;
+        padding: 10px;
+        transition: 0.2s;
+        height: 180px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card img {
+        width: 110px;
+        height: 110px;
+        object-fit: contain;
+        image-rendering: pixelated;
+        background: #2e2e2e;
+        border: 2px solid #000;
+    }
+
+    .card-name {
+        font-size: 16px;
+        text-shadow: 1px 1px 0 #000;
+        margin-top: 8px;
+    }
+
+    .card:hover {
+        background: #2e2e2e;
+        transform: scale(1.08);
+    }
+
+    .eliminated {
+        opacity: 0.35;
+        filter: grayscale(100%);
+    }
+
+    #count {
+        font-size: 18px;
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid #000;
+        padding: 10px 16px;
+        border-radius: 4px;
+        color: #fff;
+        text-shadow: 1px 1px 0 #000;
+        display: inline-block;
+        margin: 12px;
+    }
+
+    @media (max-width: 600px) {
+        .info-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        }
+        .info-content {
+        margin: 10px 0 0;
+        text-align: center;
+        }
+        .card {
+        height: 130px;
+        }
+        .card img {
+        width: 80px;
+        height: 80px;
+        }
+        .card-name {
+        font-size: 12px;
+        }
+        h1 {
+        font-size: 32px;
+        }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>GUESS WHO: MINECRAFT</h1>
+
+  <div class="info-container">
+    <div class="info-img"><img id="mobImg" src="" alt="Mob"></div>
+    <div class="info-content">
+      <h3>MOB KAMU</h3>
+      <div class="info-detail">
+        <p><b>Nama:</b> <span id="mobName"></span></p>
+        <p><b>Tipe:</b> <span id="mobType"></span></p>
+        <p><b>Spawn:</b> <span id="mobSpawn"></span></p>
+        <p><b>Dimension:</b> <span id="mobDimension"></span></p>
+        <p><b>Mountable:</b> <span id="mobMount"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <button onclick="generateMob()">Mulai Ulang (RNG)</button>
+
+  <div>
+    <select id="typeFilter" onchange="applyFilter()">
+      <option value="">Tipe Mob</option>
+      <option value="Passive">Passive</option>
+      <option value="Neutral">Neutral</option>
+      <option value="Hostile">Hostile</option>
+    </select>
+
+    <select id="dimensionFilter" onchange="applyFilter()">
+      <option value="">Dimensi</option>
+      <option value="Overworld">Overworld</option>
+      <option value="Nether">Nether</option>
+      <option value="The End">The End</option>
+    </select>
+
+    <select id="spawnFilter" onchange="applyFilter()">
+      <option value="">Spawn</option>
+      <option value="Natural">Natural</option>
+      <option value="Not Natural">Not Natural</option>
+    </select>
+  </div>
+
+  <div>
+    <label><input type="checkbox" id="mountFilter" onchange="applyFilter()"> Dapat Dinaiki</label>
+  </div>
+
+  <div id="count"></div>
+  <div class="board" id="board"></div>
+
+  <script>
+    const eliminatedSet = new Set();
+
+    function displayMobs(list) {
+      board.innerHTML = "";
+      list.forEach(m => {
+        const card = document.createElement("div");
+        card.className = "card";
+        if (eliminatedSet.has(m.name)) card.classList.add("eliminated");
+        card.innerHTML = `<img src="${m.image}" alt="${m.name}"><p class="card-name">${m.name}</p>`;
+        card.onclick = () => {
+          card.classList.toggle("eliminated");
+          if (card.classList.contains("eliminated")) eliminatedSet.add(m.name);
+          else eliminatedSet.delete(m.name);
+          updateCount();
+        };
+        board.appendChild(card);
+      });
+      updateCount();
+    }
+
+    function updateCount() {
+      const total = board.querySelectorAll(".card").length;
+      const eliminated = eliminatedSet.size;
+      count.textContent = `Tersisa: ${total - eliminated} / ${total}`;
+    }
+
+    function applyFilter() {
+      const type = typeFilter.value;
+      const dimension = dimensionFilter.value;
+      const spawn = spawnFilter.value;
+      const mount = mountFilter.checked;
+
+      const filtered = mobs.filter(m =>
+        (!type || m.type === type) &&
+        (!dimension || m.dimension.includes(dimension)) &&
+        (!spawn || m.spawn.includes(spawn)) &&
+        (!mount || m.mountable)
+      );
+      displayMobs(filtered);
+    }
+
+    function generateMob() {
+      eliminatedSet.clear();
+      const mob = mobs[Math.floor(Math.random() * mobs.length)];
+      mobImg.src = mob.image;
+      mobName.textContent = mob.name;
+      mobType.textContent = mob.type;
+      mobSpawn.textContent = mob.spawn;
+      mobDimension.textContent = mob.dimension;
+      mobMount.textContent = mob.mountable ? "Ya" : "Tidak";
+      displayMobs(mobs);
+    }
+
+        const mobs = [
+        {name:"Allay",type:"Passive",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/AllayFace.png"},
+        {name:"Armadillo",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/ArmadilloFace.png"},
+        {name:"Axolotl",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/AxolotlFace.png"},
+        {name:"Bat",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/BatFace.png"},
+        {name:"Bee",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/BeeFace.png"},
+        {name:"Blaze",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Nether",image:"mob/BlazeFace.png"},
+        {name:"Bogged",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/BoggedFace.png"},
+        {name:"Breeze",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/BreezeFace.png"},
+        {name:"Camel",type:"Passive",spawn:"Natural",mountable:true,dimension:"Overworld",image:"mob/CamelFace.png"},
+        {name:"Cat",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/CatFace.png"},
+        {name:"Cave Spider",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/Cave_Spider_face.png"},
+        {name:"Chicken",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/ChickenFace.png"},
+        {name:"Cod",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/CodBody.png"},
+        {name:"Copper Golem",type:"Passive",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/CopperGolemFace.png"},
+        {name:"Cow",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/CowFace.png"},
+        {name:"Creaking",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/87px-CreakingFace.png"},
+        {name:"Creeper",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/CreeperFace.png"},
+        {name:"Dolphin",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/DolphinFace.png"},
+        {name:"Donkey",type:"Passive",spawn:"Natural",mountable:true,dimension:"Overworld",image:"mob/DonkeyFace.png"},
+        {name:"Drowned",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/DrownedFace.png"},
+        {name:"Elder Guardian",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/Elder_Guardian_face.png"},
+        {name:"Ender Dragon",type:"Hostile",spawn:"Not Natural",mountable:false,dimension:"The End",image:"mob/Ender_Dragon_face.png"},
+        {name:"Enderman",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld / The End",image:"mob/EndermanFace.png"},
+        {name:"Endermite",type:"Hostile",spawn:"Not Natural",mountable:false,dimension:"The End / Overworld",image:"mob/EndermiteFace.png"},
+        {name:"Evoker",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/EvokerFace.png"},
+        {name:"Fox",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/FoxFace.png"},
+        {name:"Frog",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/FrogFace.png"},
+        {name:"Ghast",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Nether",image:"mob/GhastFace.png"},
+        {name:"Giant",type:"Hostile",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/GiantFace.png"},
+        {name:"Glow Squid",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/Glow_Squid_face.png"},
+        {name:"Goat",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/GoatFace.png"},
+        {name:"Guardian",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/GuardianFace.png"},
+        {name:"Happy Ghast",type:"Passive",spawn:"Not Natural",mountable:false,dimension:"Nether",image:"mob/Happy_Ghast_face.png"},
+        {name:"Herobrine",type:"Hostile",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/HerobrineFace.png"},
+        {name:"Hoglin",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Nether",image:"mob/HoglinFace.png"},
+        {name:"Horse",type:"Passive",spawn:"Natural",mountable:true,dimension:"Overworld",image:"mob/HorseFace.png"},
+        {name:"Husk",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/HuskFace.png"},
+        {name:"Illusioner",type:"Hostile",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/Illusioner_Face.png"},
+        {name:"Iron Golem",type:"Neutral",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/Iron_Golem_face.png"},
+        {name:"Llama",type:"Neutral",spawn:"Natural",mountable:true,dimension:"Overworld",image:"mob/LlamaFace.png"},
+        {name:"Magma Cube",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Nether",image:"mob/Magma_Cube_face.png"},
+        {name:"Mooshroom",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/MooshroomFace.png"},
+        {name:"Mule",type:"Passive",spawn:"Not Natural",mountable:true,dimension:"Overworld",image:"mob/MuleFace.png"},
+        {name:"Nautilus",type:"Neutral",spawn:"Not Natural",mountable:true,dimension:"Overworld",image:"mob/NautilusBody.png"},
+        {name:"Ocelot",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/OcelotFace.png"},
+        {name:"Panda",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/PandaFace.png"},
+        {name:"Parrot",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/ParrotFace.png"},
+        {name:"Phantom",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/PhantomFace.png"},
+        {name:"Pig",type:"Passive",spawn:"Natural",mountable:true,dimension:"Overworld",image:"mob/PigFace.png"},
+        {name:"Piglin",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Nether",image:"mob/94px-PiglinFace.png"},
+        {name:"Piglin Brute",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Nether",image:"mob/94px-Piglin_Brute_face.png"},
+        {name:"Pillager",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/PillagerFace.png"},
+        {name:"Polar Bear",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/Polar_Bear_face.png"},
+        {name:"Pufferfish",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/PufferfishFace.png"},
+        {name:"Rabbit",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/RabbitFace.png"},
+        {name:"Ravager",type:"Hostile",spawn:"Not Natural",mountable:true,dimension:"Overworld",image:"mob/RavagerFace.png"},
+        {name:"Salmon",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/SalmonBody.png"},
+        {name:"Sheep",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/SheepFace.png"},
+        {name:"Shulker",type:"Hostile",spawn:"Natural",mountable:false,dimension:"The End",image:"mob/ShulkerFace.png"},
+        {name:"Silverfish",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/SilverfishFace.png"},
+        {name:"Skeleton",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/SkeletonFace.png"},
+        {name:"Skeleton Horse",type:"Passive",spawn:"Not Natural",mountable:true,dimension:"Overworld",image:"mob/Skeleton_Horse_face.png"},
+        {name:"Slime",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/SlimeFace.png"},
+        {name:"Sniffer",type:"Passive",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/SnifferFace.png"},
+        {name:"Snow Golem",type:"Passive",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/Snow_Golem_face.png"},
+        {name:"Spider",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/SpiderFace.png"},
+        {name:"Squid",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/SquidFace.png"},
+        {name:"Stray",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/StrayFace.png"},
+        {name:"Strider",type:"Passive",spawn:"Natural",mountable:true,dimension:"Nether",image:"mob/StriderFace.png"},
+        {name:"Tadpole",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/TadpoleFace.png"},
+        {name:"Trader Llama",type:"Neutral",spawn:"Not Natural",mountable:true,dimension:"Overworld",image:"mob/Trader_Llama_face.png"},
+        {name:"Tropical Fish",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/TropicalFishBody.png"},
+        {name:"Turtle",type:"Passive",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/TurtleFace.png"},
+        {name:"Vex",type:"Hostile",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/VexFace.png"},
+        {name:"Villager",type:"Passive",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/VillagerFace.png"},
+        {name:"Vindicator",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/VindicatorFace.png"},
+        {name:"Wandering Trader",type:"Passive",spawn:"Not Natural",mountable:false,dimension:"Overworld",image:"mob/Wandering_Trader_face.png"},
+        {name:"Warden",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/120px-WardenFace.png"},
+        {name:"Witch",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/WitchFace.png"},
+        {name:"Wither",type:"Hostile",spawn:"Not Natural",mountable:false,dimension:"Overworld / Nether",image:"mob/WitherFace.png"},
+        {name:"Wither Skeleton",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Nether",image:"mob/Wither_Skeleton_face.png"},
+        {name:"Wolf",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/WolfFace.png"},
+        {name:"Zoglin",type:"Hostile",spawn:"Not Natural",mountable:false,dimension:"Nether / Overworld",image:"mob/ZoglinFace.png"},
+        {name:"Zombie",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/ZombieFace.png"},
+        {name:"Zombie Horse",type:"Passive",spawn:"Not Natural",mountable:true,dimension:"Overworld",image:"mob/ZombieHorseFace.png"},
+        {name:"Zombie Nautilus",type:"Neutral",spawn:"Not Natural",mountable:true,dimension:"Overworld",image:"mob/ZombieNautilusBody.png"},
+        {name:"Zombie Villager",type:"Hostile",spawn:"Natural",mountable:false,dimension:"Overworld",image:"mob/Zombie_Villager_face.png"},
+        {name:"Zombified Piglin",type:"Neutral",spawn:"Natural",mountable:false,dimension:"Nether",image:"mob/94px-Zombified_Piglin_face.png"}
+    ];
+
+    generateMob();
+  </script>
+</body>
+</html>

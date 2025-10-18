@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess Who Game Hub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #0d0d0d 0%, #050505 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    header h1 {
+      font-size: 38px;
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-shadow: 0 0 18px rgb(255, 255, 255);
+    }
+
+    .game-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 35px;
+      width: 90%;
+      max-width: 1100px;
+      margin: 70px auto;
+      justify-items: center;
+    }
+
+    .game-card {
+      background: linear-gradient(180deg, #111 0%, #090909 100%);
+      border: 1px solid rgba(0, 183, 255, 0.3);
+      border-radius: 20px;
+      overflow: hidden;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      width: 100%;
+      /* max-width: 300px; */
+      box-shadow: 0 0 12px rgba(0, 183, 255, 0.1);
+    }
+
+    .game-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 0 25px rgba(0, 183, 255, 0.5);
+      border-color: rgba(0, 183, 255, 0.6);
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .game-card h2 {
+      font-size: 22px;
+      margin: 16px 0;
+      color: #f1f1f1;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 10px rgba(0, 183, 255, 0.4);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 25px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Responsif untuk HP */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 28px;
+        margin-top: 25px;
+      }
+
+      .game-card h2 {
+        font-size: 18px;
+      }
+
+      .game-card img {
+        height: 140px;
+      }
+
+      .game-container {
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Guess Who Game Hub</h1>
+  </header>
+
+  <div class="game-container">
+    <div class="game-card" onclick="location.href='Genshin/genshingame.html'">
+      <img src="Logo/Genshin-Impact-Logo.webp" alt="Guess Who Genshin Impact">
+      <h2>Guess Who: Genshin Impact</h2>
+    </div>
+
+    <div class="game-card" onclick="location.href='Honkai/honkaigame.html'">
+      <img src="Logo/Honkai_Star_Rail.webp" alt="Guess Who Honkai Star Rail">
+      <h2>Guess Who: Honkai Star Rail</h2>
+    </div>
+
+    <div class="game-card" onclick="location.href='Pokemon/pokemongame.html'">
+      <img src="Logo/Pokemon.png" alt="Guess Who POKÉMON">
+      <h2>Guess Who: POKÉMON</h2>
+    </div>
+
+    <div class="game-card" onclick="location.href='Minecraft/minecraftgame.html'">
+      <img src="Logo/Minecraft.png" alt="Guess Who Minecraft">
+      <h2>Guess Who: Minecraft</h2>
+    </div>
+
+    <div class="game-card" onclick="location.href='PVZ/pvzgame.html'">
+      <img src="Logo/pvz.png" alt="Guess Who POKÉMON">
+      <h2>Guess Who: PVZ</h2>
+    </div>
+
+    <div class="game-card" onclick="location.href='guesswho_future.html'">
+      <img src="Logo/Coming Soon.png" alt="Guess Who Coming Soon">
+      <h2>Coming Soon...</h2>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Guess Who Project | MADE by XMag
+  </footer>
+</body>
+</html>

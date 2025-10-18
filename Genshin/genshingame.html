@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess Who: Genshin Impact</title>
+
+  <!-- Font Genshin Impact -->
+  <style>
+    @font-face {
+    font-family: 'Genshin';
+    src: url('Genshin.ttf') format('truetype');
+    }
+  </style>
+
+  <style>
+    body {
+      font-family: 'Genshin';
+      background:url('https://4kwallpapers.com/images/walls/thumbs_3t/19465.jpg') center/cover no-repeat;
+      background-attachment: scroll;
+      margin: 0;
+      text-align: center;
+      color: #000;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(8px);
+      z-index: -1;
+    }
+
+
+    h1 {
+      padding: 20px;
+      margin: 0;
+      background: rgba(255, 140, 0, 8);
+      color: #000;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+
+    .info-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin: 20px auto;
+      background: rgba(255, 255, 255, 0.75);
+      border-radius: 15px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+      width: 80%;
+      max-width: 900px;
+      padding: 20px 30px;
+      backdrop-filter: blur(10px);
+      flex-wrap: wrap;
+    }
+
+    .info-img {
+      flex: 1;
+      text-align: center;
+      margin: 15px;
+    }
+
+    .info-img img {
+      width: 180px;
+      height: 180px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+    }
+
+    .info-content {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .info-content h3 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 15px;
+      margin-top: 0;
+    }
+
+    .info-detail {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      text-align: left;
+      width: 100%;
+      max-width: 550px;
+    }
+
+    .info-left, .info-right {
+      flex: 1;
+    }
+
+    .info-left p, .info-right p {
+      font-size: 17px;
+      margin: 6px 0;
+      color: #000;
+    }
+    .info-left p:first-child {
+      font-size: 18px;
+    }
+
+    .filters {
+      margin: 10px auto;
+    }
+
+    select {
+      margin: 5px;
+      padding: 8px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    label {
+      background: rgb(255, 255, 255);
+      padding: 1.5px;
+      border-radius: 3px;
+    }
+
+    button {
+      background: rgba(255, 255, 255, 0.85);
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      margin-bottom: 7px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      backdrop-filter: blur(6px);
+    }
+
+    button:hover {
+      background: rgba(255, 180, 50, 1);
+    }
+
+    /* Papan karakter full width */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      padding: 20px;
+      /* max-width: 1000px; */
+      margin: 0 auto;
+      justify-content: center;
+      justify-items: center;
+      align-items: start;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      padding: 10px;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      backdrop-filter: blur(6px);
+      text-align: center;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    .card img {
+      width: 100%;
+      height: 130px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      background: rgba(255, 165, 0, 0.3);
+    }
+
+    .eliminated {
+      opacity: 0.3;
+      filter: grayscale(100%);
+      text-decoration: line-through;
+    }
+
+    #count {
+      font-weight: bold;
+      font-size: 18px;
+      margin: 10px auto 0;
+      background: rgb(255, 255, 255);
+      padding: 1.5px;
+      border-radius: 5px;
+      max-width: 190px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      .info-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 0;
+        margin: 15px auto;
+      }
+
+      .info-container h3 {
+        text-align: center;
+        font-size: 22px;
+        margin-bottom: -6px;
+      }
+
+      .info-detail {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        width: 95%;
+        max-width: 340px;
+        margin: 8px;
+      }
+
+      .info-detail p {
+        margin: 4px 0;
+        font-size: 16px;
+        line-height: 1.4;
+      }
+
+      .board {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        padding: 10px;
+        justify-content: center;
+        justify-items: center;
+      }
+
+      .card img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+      }
+
+      .card {
+        padding: 6px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <h1>GUESS WHO: GENSHIN IMPACT</h1>
+
+<div class="info-container">
+  <div class="info-img">
+    <img id="charImg" src="" alt="Karakter">
+  </div>
+
+  <div class="info-content">
+    <h3>Karakter Kamu</h3>
+    <div class="info-detail">
+      <div class="info-left">
+        <p><b>Nama:</b> <span id="charName"></span></p>
+        <p><b>Vision:</b> <span id="charVision"></span></p>
+        <p><b>Senjata:</b> <span id="charWeapon"></span></p>
+        <p><b>Region:</b> <span id="charRegion"></span></p>
+      </div>
+      <div class="info-right">
+        <p><b>Model Type:</b> <span id="charModel"></span></p>
+        <p><b>Release Ver:</b> <span id="charRelease"></span></p>
+        <p><b>Role:</b> <span id="charRole"></span></p>
+      </div>
+    </div>
+  </div>
+</div>
+<button onclick="generateCharacter()">Mulai Ulang (RNG)</button>
+
+<!-- FILTER -->
+<div class="filter-container">
+  <div>
+    <select id="visionFilter" onchange="applyFilter()">
+        <option value="">Vision</option>
+        <option value="Pyro">Pyro</option>
+        <option value="Hydro">Hydro</option>
+        <option value="Cryo">Cryo</option>
+        <option value="Electro">Electro</option>
+        <option value="Geo">Geo</option>
+        <option value="Anemo">Anemo</option>
+        <option value="Dendro">Dendro</option>
+      </select>
+
+      <select id="regionFilter" onchange="applyFilter()">
+        <option value="">Region</option>
+        <option value="Mondstadt">Mondstadt</option>
+        <option value="Liyue">Liyue</option>
+        <option value="Inazuma">Inazuma</option>
+        <option value="Sumeru">Sumeru</option>
+        <option value="Fontaine">Fontaine</option>
+        <option value="Natlan">Natlan</option>
+        <!-- <option value="Snezhnaya">Snezhnaya</option> -->
+      </select>
+
+      <select id="weaponFilter" onchange="applyFilter()">
+        <option value="">Senjata</option>
+        <option value="Sword">Sword</option>
+        <option value="Claymore">Claymore</option>
+        <option value="Polearm">Polearm</option>
+        <option value="Bow">Bow</option>
+        <option value="Catalyst">Catalyst</option>
+      </select>
+
+      <select id="roleFilter" onchange="applyFilter()">
+        <option value="">Role</option>
+        <option value="Main DPS">Main DPS</option>
+        <option value="Sub-DPS">Sub DPS</option>
+        <option value="Support">Support</option>
+       <option value="Healer">Healer</option>
+       <option value="None">None</option>
+     </select>
+    </div>
+
+
+
+    <div>
+      <label><input type="checkbox" class="verFilter" value="1.X" onchange="applyFilter()"> 1.0</label>
+      <label><input type="checkbox" class="verFilter" value="2.0" onchange="applyFilter()"> 2.0</label>
+      <label><input type="checkbox" class="verFilter" value="3.0" onchange="applyFilter()"> 3.0</label>
+      <label><input type="checkbox" class="verFilter" value="4.0" onchange="applyFilter()"> 4.0</label>
+      <label><input type="checkbox" class="verFilter" value="5.0" onchange="applyFilter()"> 5.0</label>
+      <label><input type="checkbox" class="verFilter" value="6.0" onchange="applyFilter()"> 6.0</label>
+    </div>
+
+    <!-- <button onclick="resetFilters()">Reset Filter</button> -->
+    <div id="count"></div>
+  </div>
+
+
+  <div class="board" id="board"></div>
+
+  <script>
+    const characters = [
+      { name: "Aether", vision: "None", weapon: "Sword", region: "Unknown", modelType: "Male Medium", releaseVersion: "1.X", role: "None", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Aether.webp" },
+      { name: "Aino", vision: "Hydro", weapon: "Claymore", region: "Nod-Krai", modelType: "Female Short", releaseVersion: "6.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Aino.webp" },
+      { name: "Albedo", vision: "Geo", weapon: "Sword", region: "Mondstadt", modelType: "Male Medium", releaseVersion: "1.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Albedo.webp" },
+      { name: "Alhaitham", vision: "Dendro", weapon: "Sword", region: "Sumeru", modelType: "Male Tall", releaseVersion: "3.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Alhaitham.webp" },
+      { name: "Aloy", vision: "Cryo", weapon: "Bow", region: "None", modelType: "Female Medium", releaseVersion: "2.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Aloy.webp" },
+      { name: "Amber", vision: "Pyro", weapon: "Bow", region: "Mondstadt", modelType: "Female Medium", releaseVersion: "1.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Amber.webp" },
+      { name: "Arataki Itto", vision: "Geo", weapon: "Claymore", region: "Inazuma", modelType: "Male Tall", releaseVersion: "2.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Arataki_Itto.webp" },
+      { name: "Arlecchino", vision: "Pyro", weapon: "Polearm", region: "Fontaine", modelType: "Female Tall", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Arlecchino.webp" },
+      { name: "Ayaka", vision: "Cryo", weapon: "Sword", region: "Inazuma", modelType: "Female Medium", releaseVersion: "2.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Kamisato_Ayaka.webp" },
+      { name: "Ayato", vision: "Hydro", weapon: "Sword", region: "Inazuma", modelType: "Male Tall", releaseVersion: "2.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Kamisato_Ayato.webp" },
+      { name: "Baizhu", vision: "Dendro", weapon: "Catalyst", region: "Liyue", modelType: "Male Tall", releaseVersion: "3.X", role: "Healer", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Baizhu.webp" },
+      { name: "Barbara", vision: "Hydro", weapon: "Catalyst", region: "Mondstadt", modelType: "Female Medium", releaseVersion: "1.X", role: "Healer", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Barbara.webp" },
+      { name: "Beidou", vision: "Electro", weapon: "Claymore", region: "Liyue", modelType: "Female Tall", releaseVersion: "1.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Beidou.webp" },
+      { name: "Bennett", vision: "Pyro", weapon: "Sword", region: "Mondstadt", modelType: "Male Medium", releaseVersion: "1.X", role: "Healer/Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Bennett.webp" },
+      { name: "Candace", vision: "Hydro", weapon: "Polearm", region: "Sumeru", modelType: "Female Tall", releaseVersion: "3.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Candace.webp" },
+      { name: "Charlotte", vision: "Cryo", weapon: "Catalyst", region: "Fontaine", modelType: "Female Medium", releaseVersion: "4.X", role: "Healer", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Charlotte.webp" },
+      { name: "Chasca", vision: "Anemo", weapon: "Bow", region: "Natlan", modelType: "Female Tall", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Chasca.webp" },
+      { name: "Chevreuse", vision: "Pyro", weapon: "Polearm", region: "Fontaine", modelType: "Female Medium", releaseVersion: "4.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Chevreuse.webp" },
+      { name: "Chiori", vision: "Geo", weapon: "Sword", region: "Inazuma", modelType: "Female Medium", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Chiori.webp" },
+      { name: "Chongyun", vision: "Cryo", weapon: "Claymore", region: "Liyue", modelType: "Male Medium", releaseVersion: "1.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Chongyun.webp" },
+      { name: "Citlali", vision: "Cryo", weapon: "Catalyst", region: "Natlan", modelType: "Female Medium", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Citlali.webp" },
+      { name: "Clorinde", vision: "Electro", weapon: "Sword", region: "Fontaine", modelType: "Female Tall", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Clorinde.webp" },
+      { name: "Collei", vision: "Dendro", weapon: "Bow", region: "Sumeru", modelType: "Female Medium", releaseVersion: "3.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Collei.webp" },
+      { name: "Cyno", vision: "Electro", weapon: "Polearm", region: "Sumeru", modelType: "Male Medium", releaseVersion: "3.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Cyno.webp" },
+      { name: "Dahlia", vision: "Hydro", weapon: "Sword", region: "Mondstadt", modelType: "Male Medium", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Dahlia.webp" },
+      { name: "Dehya", vision: "Pyro", weapon: "Claymore", region: "Sumeru", modelType: "Female Tall", releaseVersion: "3.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Dehya.webp" },
+      { name: "Diluc", vision: "Pyro", weapon: "Claymore", region: "Mondstadt", modelType: "Male Tall", releaseVersion: "1.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Diluc.webp" },
+      { name: "Diona", vision: "Cryo", weapon: "Bow", region: "Mondstadt", modelType: "Female Short", releaseVersion: "1.X", role: "Healer/Shielder", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Diona.webp" },
+      { name: "Dori", vision: "Electro", weapon: "Claymore", region: "Sumeru", modelType: "Female Short", releaseVersion: "3.X", role: "Healer", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Dori.webp" },
+      { name: "Emilie", vision: "Dendro", weapon: "Polearm", region: "Fontaine", modelType: "Female Medium", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Emilie.webp" },
+      { name: "Escoffier", vision: "Cryo", weapon: "Polearm", region: "Fontaine", modelType: "Female Medium", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Escoffier.webp" },
+      { name: "Eula", vision: "Cryo", weapon: "Claymore", region: "Mondstadt", modelType: "Female Tall", releaseVersion: "1.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Eula.webp" },
+      { name: "Faruzan", vision: "Anemo", weapon: "Bow", region: "Sumeru", modelType: "Female Medium", releaseVersion: "3.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Faruzan.webp" },
+      { name: "Fischl", vision: "Electro", weapon: "Bow", region: "Mondstadt", modelType: "Female Medium", releaseVersion: "1.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Fischl.webp" },
+      { name: "Flins", vision: "Electro", weapon: "Polearm", region: "Nod-Krai", modelType: "Male Tall", releaseVersion: "6.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Flins.webp" },
+      { name: "Freminet", vision: "Cryo", weapon: "Claymore", region: "Fontaine", modelType: "Male Medium", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Freminet.webp" },
+      { name: "Furina", vision: "Hydro", weapon: "Sword", region: "Fontaine", modelType: "Female Medium", releaseVersion: "4.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Furina.webp" },
+      { name: "Gaming", vision: "Pyro", weapon: "Claymore", region: "Liyue", modelType: "Male Medium", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Gaming.webp" },
+      { name: "Ganyu", vision: "Cryo", weapon: "Bow", region: "Liyue", modelType: "Female Medium", releaseVersion: "1.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Ganyu.webp" },
+      { name: "Gorou", vision: "Geo", weapon: "Bow", region: "Inazuma", modelType: "Male Medium", releaseVersion: "2.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Gorou.webp" },
+      { name: "Heizou", vision: "Anemo", weapon: "Catalyst", region: "Inazuma", modelType: "Male Medium", releaseVersion: "2.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Shikanoin_Heizou.webp" },
+      { name: "Hu Tao", vision: "Pyro", weapon: "Polearm", region: "Liyue", modelType: "Female Medium", releaseVersion: "1.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Hu_Tao.webp" },
+      { name: "Iansan", vision: "Electro", weapon: "Polearm", region: "Natlan", modelType: "Female Short", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Iansan.webp" },
+      { name: "Ifa", vision: "Anemo", weapon: "Catalyst", region: "Natlan", modelType: "Male Tall", releaseVersion: "5.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Ifa.webp" },
+      { name: "Ineffa", vision: "Electro", weapon: "Polearm", region: "Nod-Krai", modelType: "Female Medium", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Ineffa.webp" },
+      { name: "Jean", vision: "Anemo", weapon: "Sword", region: "Mondstadt", modelType: "Female Tall", releaseVersion: "1.X", role: "Healer/Support", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Jean.webp" },
+      { name: "Kachina", vision: "Geo", weapon: "Polearm", region: "Natlan", modelType: "Female Short", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Kachina.webp" },
+      { name: "Kazuha", vision: "Anemo", weapon: "Sword", region: "Inazuma", modelType: "Male Medium", releaseVersion: "1.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Kaedehara_Kazuha.webp" },
+      { name: "Kaeya", vision: "Cryo", weapon: "Sword", region: "Mondstadt", modelType: "Male Tall", releaseVersion: "1.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Kaeya.webp" },
+      { name: "Kaveh", vision: "Dendro", weapon: "Claymore", region: "Sumeru", modelType: "Male Tall", releaseVersion: "3.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Kaveh.webp" },
+      { name: "Keqing", vision: "Electro", weapon: "Sword", region: "Liyue", modelType: "Female Medium", releaseVersion: "1.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Keqing.webp" },
+      { name: "Kinich", vision: "Dendro", weapon: "Claymore", region: "Natlan", modelType: "Male Medium", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Kinich.webp" },
+      { name: "Kirara", vision: "Dendro", weapon: "Sword", region: "Inazuma", modelType: "Female Medium", releaseVersion: "3.X", role: "Shielder", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Kirara.webp" },
+      { name: "Klee", vision: "Pyro", weapon: "Catalyst", region: "Mondstadt", modelType: "Female Short", releaseVersion: "1.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Klee.webp" },
+      { name: "Kokomi", vision: "Hydro", weapon: "Catalyst", region: "Inazuma", modelType: "Female Medium", releaseVersion: "2.X", role: "Healer", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Sangonomiya_Kokomi.webp" },
+      { name: "Kujou Sara", vision: "Electro", weapon: "Bow", region: "Inazuma", modelType: "Female Tall", releaseVersion: "2.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Kujou_Sara.webp" },
+      { name: "Kuki Shinobu", vision: "Electro", weapon: "Sword", region: "Inazuma", modelType: "Female Medium", releaseVersion: "2.X", role: "Healer/Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Kuki_Shinobu.webp" },
+      { name: "Lan Yan", vision: "Anemo", weapon: "Catalyst", region: "Liyue", modelType: "Female Medium", releaseVersion: "5.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Lan_Yan.webp" },
+      { name: "Lauma", vision: "Dendro", weapon: "Catalyst", region: "Nod-Krai", modelType: "Female Tall", releaseVersion: "6.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Lauma.webp" },
+      { name: "Layla", vision: "Cryo", weapon: "Sword", region: "Sumeru", modelType: "Female Medium", releaseVersion: "3.X", role: "Shielder", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Layla.webp" },
+      { name: "Lisa", vision: "Electro", weapon: "Catalyst", region: "Mondstadt", modelType: "Female Tall", releaseVersion: "1.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Lisa.webp" },
+      { name: "Lumine", vision: "None", weapon: "Sword", region: "Unknown", modelType: "Female Medium", releaseVersion: "1.X", role: "None", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Lumine.webp" },
+      { name: "Lynette", vision: "Anemo", weapon: "Sword", region: "Fontaine", modelType: "Female Medium", releaseVersion: "4.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Lynette.webp" },
+      { name: "Lyney", vision: "Pyro", weapon: "Bow", region: "Fontaine", modelType: "Male Medium", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Lyney.webp" },
+      { name: "Mavuika", vision: "Pyro", weapon: "Claymore", region: "Natlan", modelType: "Female Tall", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Mavuika.webp" },
+      { name: "Mika", vision: "Cryo", weapon: "Polearm", region: "Mondstadt", modelType: "Male Medium", releaseVersion: "3.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Mika.webp" },
+      { name: "Mona", vision: "Hydro", weapon: "Catalyst", region: "Mondstadt", modelType: "Female Medium", releaseVersion: "1.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Mona.webp" },
+      { name: "Mualani", vision: "Hydro", weapon: "Catalyst", region: "Natlan", modelType: "Female Medium", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Mualani.webp" },
+      { name: "Nahida", vision: "Dendro", weapon: "Catalyst", region: "Sumeru", modelType: "Female Short", releaseVersion: "3.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Nahida.webp" },
+      { name: "Navia", vision: "Geo", weapon: "Claymore", region: "Fontaine", modelType: "Female Tall", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Navia.webp" },
+      { name: "Neuvillette", vision: "Hydro", weapon: "Catalyst", region: "Fontaine", modelType: "Male Tall", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Neuvillette.webp" },
+      { name: "Nilou", vision: "Hydro", weapon: "Sword", region: "Sumeru", modelType: "Female Medium", releaseVersion: "3.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Nilou.webp" },
+      { name: "Ningguang", vision: "Geo", weapon: "Catalyst", region: "Liyue", modelType: "Female Tall", releaseVersion: "1.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Ningguang.webp" },
+      { name: "Noelle", vision: "Geo", weapon: "Claymore", region: "Mondstadt", modelType: "Female Medium", releaseVersion: "1.X", role: "Healer/Shielder", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Noelle.webp" },
+      { name: "Ororon", vision: "Electro", weapon: "Bow", region: "Natlan", modelType: "Male Tall", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Ororon.webp" },
+      { name: "Qiqi", vision: "Cryo", weapon: "Sword", region: "Liyue", modelType: "Female Short", releaseVersion: "1.X", role: "Healer", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Qiqi.webp" },
+      { name: "Raiden", vision: "Electro", weapon: "Polearm", region: "Inazuma", modelType: "Female Tall", releaseVersion: "2.X", role: "Main DPS/Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Raiden_Shogun.webp" },
+      { name: "Razor", vision: "Electro", weapon: "Claymore", region: "Mondstadt", modelType: "Male Medium", releaseVersion: "1.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Razor.webp" },
+      { name: "Rosaria", vision: "Cryo", weapon: "Polearm", region: "Mondstadt", modelType: "Female Tall", releaseVersion: "1.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Rosaria.webp" },
+      { name: "Sayu", vision: "Anemo", weapon: "Claymore", region: "Inazuma", modelType: "Female Short", releaseVersion: "2.X", role: "Healer/Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Sayu.webp" },
+      { name: "Sethos", vision: "Electro", weapon: "Bow", region: "Sumeru", modelType: "Male Medium", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Sethos.webp" },
+      { name: "Shenhe", vision: "Cryo", weapon: "Polearm", region: "Liyue", modelType: "Female Tall", releaseVersion: "2.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Shenhe.webp" },
+      { name: "Sigewinne", vision: "Hydro", weapon: "Bow", region: "Fontaine", modelType: "Female Short", releaseVersion: "4.X", role: "Healer", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Sigewinne.webp" },
+      { name: "Skirk", vision: "Cryo", weapon: "Sword", region: "None", modelType: "Female Medium", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Skirk.webp" },
+      { name: "Sucrose", vision: "Anemo", weapon: "Catalyst", region: "Mondstadt", modelType: "Female Medium", releaseVersion: "1.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Sucrose.webp" },
+      { name: "Tartaglia", vision: "Hydro", weapon: "Bow", region: "Snezhnaya", modelType: "Male Tall", releaseVersion: "1.X", role: "Main DPS/Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Tartaglia.webp" },
+      { name: "Thoma", vision: "Pyro", weapon: "Polearm", region: "Inazuma", modelType: "Male Tall", releaseVersion: "2.X", role: "Shielder/Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Thoma.webp" },
+      { name: "Tighnari", vision: "Dendro", weapon: "Bow", region: "Sumeru", modelType: "Male Medium", releaseVersion: "3.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Tighnari.webp" },
+      { name: "Varesa", vision: "Electro", weapon: "Catalyst", region: "Natlan", modelType: "Female Medium", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Varesa.webp" },
+      { name: "Venti", vision: "Anemo", weapon: "Bow", region: "Mondstadt", modelType: "Male Medium", releaseVersion: "1.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Venti.webp" },
+      { name: "Wanderer", vision: "Anemo", weapon: "Catalyst", region: "Sumeru", modelType: "Male Medium", releaseVersion: "3.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Wanderer.webp" },
+      { name: "Wriothesley", vision: "Cryo", weapon: "Catalyst", region: "Fontaine", modelType: "Male Tall", releaseVersion: "4.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Wriothesley.webp" },
+      { name: "Xiangling", vision: "Pyro", weapon: "Polearm", region: "Liyue", modelType: "Female Medium", releaseVersion: "1.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Xiangling.webp" },
+      { name: "Xianyun", vision: "Anemo", weapon: "Catalyst", region: "Liyue", modelType: "Female Tall", releaseVersion: "4.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Xianyun.webp" },
+      { name: "Xiao", vision: "Anemo", weapon: "Polearm", region: "Liyue", modelType: "Male Medium", releaseVersion: "1.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Xiao.webp" },
+      { name: "Xilonen", vision: "Geo", weapon: "Sword", region: "Natlan", modelType: "Female Tall", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Xilonen.webp" },
+      { name: "Xingqiu", vision: "Hydro", weapon: "Sword", region: "Liyue", modelType: "Male Medium", releaseVersion: "1.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Xingqiu.webp" },
+      { name: "Xinyan", vision: "Pyro", weapon: "Claymore", region: "Liyue", modelType: "Female Medium", releaseVersion: "1.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Xinyan.webp" },
+      { name: "Yae Miko", vision: "Electro", weapon: "Catalyst", region: "Inazuma", modelType: "Female Tall", releaseVersion: "2.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Yae_Miko.webp" },
+      { name: "Yanfei", vision: "Pyro", weapon: "Catalyst", region: "Liyue", modelType: "Female Medium", releaseVersion: "1.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Yanfei.webp" },
+      { name: "Yaoyao", vision: "Dendro", weapon: "Polearm", region: "Liyue", modelType: "Female Short", releaseVersion: "3.X", role: "Healer", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Yaoyao.webp" },
+      { name: "Yelan", vision: "Hydro", weapon: "Bow", region: "Liyue", modelType: "Female Tall", releaseVersion: "2.X", role: "Sub-DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Yelan.webp" },
+      { name: "Yoimiya", vision: "Pyro", weapon: "Bow", region: "Inazuma", modelType: "Female Medium", releaseVersion: "2.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Yoimiya.webp" },
+      { name: "Yumemizuki", vision: "Anemo", weapon: "Catalyst", region: "Inazuma", modelType: "Female Medium", releaseVersion: "5.X", role: "Main DPS", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Yumemizuki_Mizuki.webp" },
+      { name: "Yun Jin", vision: "Geo", weapon: "Polearm", region: "Liyue", modelType: "Female Medium", releaseVersion: "2.X", role: "Support", img: "https://genshin-guess-who.com/genshin/char_icons_4star/Yun_Jin.webp" },
+      { name: "Zhongli", vision: "Geo", weapon: "Polearm", region: "Liyue", modelType: "Male Tall", releaseVersion: "1.X", role: "Shielder", img: "https://genshin-guess-who.com/genshin/char_icons_5star/Zhongli.webp" }
+    ];
+
+    let eliminatedSet = new Set();
+    const board = document.getElementById('board');
+
+    function renderBoard(filteredChars = characters) {
+      board.innerHTML = '';
+      filteredChars.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        if (eliminatedSet.has(c.name)) card.classList.add('eliminated');
+
+        card.innerHTML = `
+          <img src="${c.img}" alt="${c.name}">
+          <p>${c.name}</p>
+        `;
+
+        card.onclick = () => toggleElimination(c.name, card);
+        board.appendChild(card);
+      });
+      document.getElementById('count').textContent = 
+        `Sisa karakter: ${characters.length - eliminatedSet.size}`;
+    }
+
+    function toggleElimination(name, card) {
+      if (eliminatedSet.has(name)) {
+        eliminatedSet.delete(name);
+        card.classList.remove('eliminated');
+      } else {
+        eliminatedSet.add(name);
+        card.classList.add('eliminated');
+      }
+      document.getElementById('count').textContent = 
+        `Sisa karakter: ${characters.length - eliminatedSet.size}`;
+    }
+
+    function applyFilter() {
+      const vision = document.getElementById('visionFilter').value;
+      const region = document.getElementById('regionFilter').value;
+      const weapon = document.getElementById('weaponFilter').value;
+      const role = document.getElementById('roleFilter').value;
+
+      const versions = Array.from(document.querySelectorAll('.verFilter:checked')).map(cb => cb.value);
+
+      let filtered = characters.filter(c => {
+        return (!vision || c.vision === vision) &&
+              (!region || c.region === region) &&
+              (!weapon || c.weapon === weapon) &&
+              (!role || c.role === role) &&
+              (versions.length === 0 || versions.includes(c.releaseVersion));
+      });
+
+      // tampilkan hanya karakter sesuai filter, tetapi tetap simpan eliminasi
+      renderBoard(filtered);
+    }
+
+    function generateCharacter() {
+      // reset semua eliminasi
+      eliminatedSet.clear();
+
+      // reset filter
+      document.getElementById('visionFilter').value = '';
+      document.getElementById('regionFilter').value = '';
+      document.getElementById('weaponFilter').value = '';
+      document.getElementById('roleFilter').value = '';
+      document.querySelectorAll('.verFilter').forEach(cb => cb.checked = false);
+
+      // pilih karakter random
+      const randomChar = characters[Math.floor(Math.random() * characters.length)];
+
+      document.getElementById('charImg').src = randomChar.img;
+      document.getElementById('charName').textContent = randomChar.name;
+      document.getElementById('charVision').textContent = randomChar.vision;
+      document.getElementById('charWeapon').textContent = randomChar.weapon;
+      document.getElementById('charRegion').textContent = randomChar.region;
+      document.getElementById('charModel').textContent = randomChar.modelType;
+      document.getElementById('charRelease').textContent = randomChar.releaseVersion;
+      document.getElementById('charRole').textContent = randomChar.role;
+
+      // render ulang papan penuh
+      renderBoard();
+    }
+
+    // jalankan awal
+    generateCharacter();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess Who: Honkai Star Rail</title>
+
+  <!-- Font Honkai Star Rail -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+  </style>
+
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: url('https://images7.alphacoders.com/132/1324267.png') center/cover no-repeat;
+      background-attachment: fixed;
+      margin: 0;
+      text-align: center;
+      color: #e0e0ff;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(10, 15, 30, 0.65);
+      backdrop-filter: blur(10px);
+      z-index: -1;
+    }
+
+    h1 {
+      padding: 20px;
+      margin: 0;
+      background: linear-gradient(90deg, #2b2e77, #5060e0, #29aaff);
+      color: #ffffff;
+      font-size: 30px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px #29aaff;
+      border-bottom: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .info-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin: 25px auto;
+      background: rgba(30, 40, 70, 0.6);
+      border: 1px solid rgba(100, 150, 255, 0.3);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 150, 255, 0.25);
+      width: 85%;
+      max-width: 950px;
+      padding: 25px;
+      flex-wrap: wrap;
+      backdrop-filter: blur(12px);
+    }
+
+    .info-img {
+      flex: 1;
+      text-align: center;
+      margin: 15px;
+    }
+
+    .info-img img {
+      width: 180px;
+      height: 180px;
+      border-radius: 15px;
+      object-fit: cover;
+      box-shadow: 0 0 20px rgba(100, 150, 255, 0.4);
+    }
+
+    .info-content {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .info-content h3 {
+      text-align: center;
+      font-size: 22px;
+      color: #a2cfff;
+      margin-bottom: 15px;
+      margin-top: 0;
+      text-shadow: 0 0 5px #1e90ff;
+    }
+
+    .info-detail {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      text-align: left;
+      width: 100%;
+      max-width: 550px;
+    }
+
+    .info-left p, .info-right p {
+      font-size: 16px;
+      margin: 6px 0;
+      color: #cfdcff;
+    }
+
+    .filters {
+      margin: 15px auto;
+    }
+
+    select {
+      margin: 5px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(25, 35, 60, 0.7);
+      color: #a2cfff;
+      border: 1px solid rgba(100,150,255,0.4);
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    select:hover {
+      background: rgba(40, 80, 140, 0.8);
+    }
+
+    label {
+      background: rgba(40, 60, 100, 0.5);
+      padding: 3px 6px;
+      border-radius: 4px;
+      color: #cfe4ff;
+      margin: 2px;
+    }
+
+    button {
+      background: linear-gradient(90deg, #2633a8, #3e59ff);
+      color: #fff;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: 0.3s;
+      margin: 10px;
+      box-shadow: 0 0 10px rgba(90, 130, 255, 0.4);
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #29aaff, #7aa6ff);
+      box-shadow: 0 0 15px rgba(80, 180, 255, 0.7);
+      transform: translateY(-2px);
+    }
+
+    /* Papan karakter */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1500px;
+      margin: 0 auto;
+      justify-content: center;
+      justify-items: center;
+      align-items: start;
+    }
+
+    .card {
+      background: rgba(25, 35, 60, 0.8);
+      border: 1px solid rgba(80,120,255,0.4);
+      border-radius: 15px;
+      padding: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(100,150,255,0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+      color: #dbe9ff;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 200px;
+      min-width: 140px;
+    }
+
+    .card-name {
+      margin-top: auto;
+      text-align: center;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+
+
+    .card p {
+      margin-top: auto;
+      text-align: center;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.2;
+      margin-bottom: 5px; /* opsional: sedikit jarak bawah agar teks tak menempel tepi */
+    }
+
+
+    .card:hover {
+      transform: scale(1.07);
+      background: rgba(40, 80, 150, 0.8);
+      box-shadow: 0 0 20px rgba(100,180,255,0.5);
+    }
+
+    .card img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover; /* agar gambar tetap proporsional */
+      border-radius: 10px;
+    }
+
+    .eliminated {
+      opacity: 0.25;
+      filter: grayscale(100%);
+      text-decoration: line-through;
+    }
+
+    #count {
+      font-weight: bold;
+      font-size: 17px;
+      margin: 10px auto;
+      background: rgba(25,35,60,0.8);
+      padding: 6px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(100,150,255,0.4);
+      color: #cfe4ff;
+      max-width: 200px;
+    }
+
+   @media (max-width: 600px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      .info-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 0;
+        margin: 15px auto;
+      }
+
+      .info-container h3 {
+        text-align: center;
+        font-size: 22px;
+        margin-bottom: -6px;
+      }
+
+      .info-detail {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        width: 95%;
+        max-width: 340px;
+        margin: 8px;
+      }
+
+      .info-detail p {
+        margin: 4px 0;
+        font-size: 16px;
+        line-height: 1.4;
+      }
+
+      /* 🧩 Ukuran papan karakter untuk HP */
+      .board {
+        grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); /* lebih kecil */
+        gap: 8px;
+        padding: 8px;
+        justify-content: center;
+        justify-items: center;
+      }
+
+      /* 🧱 Card seragam dan rapi */
+      .card {
+        background: rgba(25, 35, 60, 0.8);
+        border: 1px solid rgba(80,120,255,0.4);
+        border-radius: 10px;
+        padding: 6px;
+        height: 140px; /* semua card sama tinggi */
+        min-width: 85px; /* seragam */
+        max-width: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        color: #dbe9ff;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      /* 🖼️ Gambar lebih kecil dan tidak menempel dengan teks */
+      .card img {
+        width: 100%;
+        height: 90px;
+        object-fit: contain;
+        border-radius: 6px;
+        margin-bottom: 5px; /* jarak dengan teks */
+      }
+
+      /* 📝 Teks tetap di tengah dan tidak menempel gambar */
+      .card p {
+        font-size: 12px;
+        margin: 0;
+        line-height: 1.3;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <h1>GUESS WHO: HONKAI STAR RAIL</h1>
+
+  <!-- Konten tetap sama -->
+  <div class="info-container">
+    <div class="info-img">
+      <img id="charImg" src="" alt="Karakter">
+    </div>
+
+    <div class="info-content">
+      <h3>Karakter Kamu</h3>
+      <div class="info-detail">
+        <div class="info-left">
+          <p><b>Nama:</b> <span id="charName"></span></p>
+          <p><b>Element:</b> <span id="charElement"></span></p>
+          <p><b>Path:</b> <span id="charPath"></span></p>
+        </div>
+        <div class="info-right">
+          <p><b>Faction:</b> <span id="charFaction"></span></p>
+          <p><b>Release Ver:</b> <span id="charRelease"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button onclick="generateCharacter()">Mulai Ulang (RNG)</button>
+
+  <!-- Filter tetap sama -->
+  <div class="filter-container">
+    <div class="filters">
+      <select id="pathFilter" onchange="applyFilter()">
+        <option value="">Path</option>
+        <option value="Destruction">Destruction</option>
+        <option value="The Hunt">The Hunt</option>
+        <option value="Erudition">Erudition</option>
+        <option value="Harmony">Harmony</option>
+        <option value="Nihility">Nihility</option>
+        <option value="Preservation">Preservation</option>
+        <option value="Abundance">Abundance</option>
+        <option value="Remembrance">Remembrance</option>
+      </select>
+
+      <select id="elementFilter" onchange="applyFilter()">
+        <option value="">Element</option>
+        <option value="Physical">Physical</option>
+        <option value="Fire">Fire</option>
+        <option value="Ice">Ice</option>
+        <option value="Wind">Wind</option>
+        <option value="Lightning">Lightning</option>
+        <option value="Quantum">Quantum</option>
+        <option value="Imaginary">Imaginary</option>
+      </select>
+
+      <select id="factionFilter" onchange="applyFilter()">
+        <option value="">Faction</option>
+        <option value="Astral Express">Astral Express</option>
+        <option value="Herta Space Station">Herta Space Station</option>
+        <option value="Belobog">Belobog</option>
+        <option value="Xianzhou Luofu">Xianzhou Luofu</option>
+        <option value="Stellaron Hunters">Stellaron Hunters</option>
+        <option value="IPC">Interastral Peace Corporation</option>
+        <option value="Penacony">Penacony</option>
+        <option value="Galaxy Ranger">Galaxy Ranger</option>
+        <option value="Amphoreus">Amphoreus</option>
+        <!-- <option value="Belobog-Underworld">Belobog-Underworld</option> -->
+        <!-- <option value="IPC-Penacony">IPC-Penacony</option> -->
+        <!-- <option value="The Knights of Beauty">The Knights of Beauty</option> -->
+        <!-- <option value="Masked Fool">Masked Fool</option> -->
+        <!-- <option value="Garden of Recollection">Garden of Recollection</option> -->
+        <!-- <option value="Self-Annihilator">Self-Annihilator</option> -->
+        <!-- <option value="Intelligentsia Guild">Intelligentsia Guild</option> -->
+        <!-- <option value="Cosmos">Cosmos</option> -->
+      </select>
+    </div>
+
+    <div>
+      <label><input type="checkbox" class="verFilter" value="1.0" onchange="applyFilter()"> 1.0</label>
+      <label><input type="checkbox" class="verFilter" value="2.0" onchange="applyFilter()"> 2.0</label>
+      <label><input type="checkbox" class="verFilter" value="3.0" onchange="applyFilter()"> 3.0</label>
+      <!-- <label><input type="checkbox" class="verFilter" value="4.0" onchange="applyFilter()"> 3.0+</label> -->
+    </div>
+
+    <div id="count"></div>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <script>
+    const characters = [
+      {name:"Acheron",element:"Lightning",path:"Nihility",version:"2.X",faction:"Galaxy Ranger",image:"Character_Acheron_Icon.webp"},
+      {name:"Aglaea",element:"Lightning",path:"Remembrance",version:"3.X",faction:"Amphoreus",image:"Character_Aglaea_Icon.webp"},
+      {name:"Anaxa",element:"Wind",path:"Erudition",version:"3.X",faction:"Amphoreus",image:"Character_Anaxa_Icon.webp"},
+      {name:"Archer",element:"Quantum",path:"The Hunt",version:"3.X",faction:"Unknown",image:"Character_Archer_Icon.webp"},
+      {name:"Argenti",element:"Physical",path:"Erudition",version:"1.X",faction:"Cosmics",image:"Character_Argenti_Icon.webp"},
+      {name:"Arlan",element:"Lightning",path:"Destruction",version:"1.X",faction:"Herta Space Station",image:"Character_Arlan_Icon.webp"},
+      {name:"Asta",element:"Fire",path:"Harmony",version:"1.X",faction:"Herta Space Station",image:"Character_Asta_Icon.webp"},
+      {name:"Aventurine",element:"Imaginary",path:"Preservation",version:"2.X",faction:"Penacony-IPC",image:"Character_Aventurine_Icon.webp"},
+      {name:"Bailu",element:"Lightning",path:"Abundance",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Bailu_Icon.webp"},
+      {name:"Black Swan",element:"Wind",path:"Nihility",version:"2.X",faction:"Cosmics",image:"Character_Black_Swan_Icon.webp"},
+      {name:"Blade",element:"Wind",path:"Destruction",version:"1.X",faction:"Stellaron Hunters",image:"Character_Blade_Icon.webp"},
+      {name:"Boothill",element:"Physical",path:"The Hunt",version:"2.X",faction:"Galaxy Ranger",image:"Character_Boothill_Icon.webp"},
+      {name:"Bronya",element:"Wind",path:"Harmony",version:"1.X",faction:"Belobog",image:"Character_Bronya_Icon.webp"},
+      {name:"Caelus (Destruction)",element:"Physical",path:"Destruction",version:"1.X",faction:"Astral Express",image:"Character_Caelus_(Destruction)_Icon.webp"},
+      {name:"Caelus (Preservation)",element:"Fire",path:"Preservation",version:"1.X",faction:"Astral Express",image:"Character_Caelus_(Preservation)_Icon.webp"},
+      {name:"Caelus (Harmony)",element:"Imaginary",path:"Harmony",version:"1.X",faction:"Astral Express",image:"Character_Caelus_(Harmony)_Icon.webp"},
+      {name:"Caelus (Remembrance)",element:"Ice",path:"Remembrance",version:"1.X",faction:"Astral Express",image:"Character_Caelus_(Remembrance)_Icon.webp"},
+      {name:"Castorice",element:"Quantum",path:"Remembrance",version:"3.X",faction:"Amphoreus",image:"Character_Castorice_Icon.webp"},
+      {name:"Cerydra",element:"Wind",path:"Harmony",version:"3.X",faction:"Amphoreus",image:"Character_Cerydra_Icon.webp"},
+      {name:"Cipher",element:"Quantum",path:"Erudition",version:"3.X",faction:"Amphoreus",image:"Character_Cipher_Icon.webp"},
+      {name:"Clara",element:"Physical",path:"Destruction",version:"1.X",faction:"Belobog-Underworld",image:"Character_Clara_Icon.webp"},
+      {name:"Cyrene",element:"Ice",path:"Remembrance",version:"3.X",faction:"Amphoreus",image:"Character_Cyrene_Icon.webp"},
+      {name:"Dan Heng",element:"Wind",path:"The Hunt",version:"1.X",faction:"Astral Express",image:"Character_Dan_Heng_Icon.webp"},
+      {name:"Dan Heng (Imbibitor Lunae)",element:"Imaginary",path:"Destruction",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Dan_Heng_(Imbibitor_Lunae)_Icon.webp"},
+      {name:"Dan Heng (Permansor Terrae)",element:"Physical",path:"Preservation",version:"3.X",faction:"Unknown",image:"Character_Dan_Heng_(Permansor_Terrae).webp"},
+      {name:"Dr. Ratio",element:"Imaginary",path:"The Hunt",version:"1.X",faction:"Cosmics",image:"Character_Dr._Ratio_Icon.webp"},
+      {name:"Evernight",element:"Ice",path:"Remembrance",version:"3.X",faction:"Amphoreus",image:"Character_Evernight_Icon.webp"},
+      {name:"Feixiao",element:"Wind",path:"The Hunt",version:"2.X",faction:"Xianzhou Luofu",image:"Character_Feixiao_Icon.webp"},
+      {name:"Firefly",element:"Fire",path:"Destruction",version:"2.X",faction:"Penacony-Stellaron Hunters",image:"Character_Firefly_Icon.webp"},
+      {name:"Fu Xuan",element:"Quantum",path:"Preservation",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Fu_Xuan_Icon.webp"},
+      {name:"Fugue",element:"Fire",path:"Nihility",version:"2.X",faction:"Xianzhou Luofu",image:"Character_Fugue_Icon.webp"},
+      {name:"Gallagher",element:"Fire",path:"Abundance",version:"2.X",faction:"Penacony",image:"Character_Gallagher_Icon.webp"},
+      {name:"Gepard",element:"Ice",path:"Preservation",version:"1.X",faction:"Belobog-Silvermane Guards",image:"Character_Gepard_Icon.webp"},
+      {name:"Guinaifen",element:"Fire",path:"Nihility",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Guinaifen_Icon.webp"},
+      {name:"Hanya",element:"Physical",path:"Harmony",version:"1.X",faction:"Xianzhou Luofu-Ten Lords Commission",image:"Character_Hanya_Icon.webp"},
+      {name:"Herta",element:"Ice",path:"Erudition",version:"1.X",faction:"Herta Space Station",image:"Character_Herta_Icon.webp"},
+      {name:"Himeko",element:"Fire",path:"Erudition",version:"1.X",faction:"Astral Express",image:"Character_Himeko_Icon.webp"},
+      {name:"Hook",element:"Fire",path:"Destruction",version:"1.X",faction:"Belobog-The Moles",image:"Character_Hook_Icon.webp"},
+      {name:"Huohuo",element:"Wind",path:"Abundance",version:"1.X",faction:"Xianzhou Luofu-Ten Lords Commission",image:"Character_Huohuo_Icon.webp"},
+      {name:"Hyacine",element:"Wind",path:"Remembrance",version:"3.X",faction:"Amphoreus",image:"Character_Hyacine_Icon.webp"},
+      {name:"Hysilens",element:"Physical",path:"Nihility",version:"3.X",faction:"Amphoreus",image:"Character_Hysilens_Icon.webp"},
+      {name:"Jade",element:"Quantum",path:"Erudition",version:"2.X",faction:"IPC-Penacony",image:"Character_Jade_Icon.webp"},
+      {name:"Jiaoqiu",element:"Fire",path:"Nihility",version:"2.X",faction:"Xianzhou Luofu",image:"Character_Jiaoqiu_Icon.webp"},
+      {name:"Jing Yuan",element:"Lightning",path:"Erudition",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Jing_Yuan_Icon.webp"},
+      {name:"Jingliu",element:"Ice",path:"Destruction",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Jingliu_Icon.webp"},
+      {name:"Kafka",element:"Lightning",path:"Nihility",version:"1.X",faction:"Stellaron Hunters",image:"Character_Kafka_Icon.webp"},
+      {name:"Lingsha",element:"Fire",path:"Abundance",version:"2.X",faction:"Xianzhou Luofu",image:"Character_Lingsha_Icon.webp"},
+      {name:"Luka",element:"Physical",path:"Nihility",version:"1.X",faction:"Belobog-Underworld",image:"Character_Luka_Icon.webp"},
+      {name:"Luocha",element:"Imaginary",path:"Abundance",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Luocha_Icon.webp"},
+      {name:"Lynx",element:"Quantum",path:"Abundance",version:"1.X",faction:"Belobog-Landau Family",image:"Character_Lynx_Icon.webp"},
+      {name:"March 7th (The Hunt)",element:"Imaginary",path:"The Hunt",version:"2.X",faction:"Astral Express",image:"Character_March_7th_29_Icon.webp"},
+      {name:"March 7th (Preservation)",element:"Ice",path:"Preservation",version:"1.X",faction:"Astral Express",image:"Character_March_7th_Icon.webp"},
+      {name:"Misha",element:"Ice",path:"Destruction",version:"2.X",faction:"Penacony",image:"Character_Misha_Icon.webp"},
+      {name:"Moze",element:"Lightning",path:"The Hunt",version:"2.X",faction:"Xianzhou Luofu",image:"Character_Moze_Icon.webp"},
+      {name:"Mydei",element:"Imaginary",path:"Abundance",version:"3.X",faction:"Penacony",image:"Character_Mydei_Icon.webp"},
+      {name:"Natasha",element:"Physical",path:"Abundance",version:"1.X",faction:"Belobog-Underworld",image:"Character_Natasha_Icon.webp"},
+      {name:"Pela",element:"Ice",path:"Nihility",version:"1.X",faction:"Belobog-Silvermane Guards",image:"Character_Pela_Icon.webp"},
+      {name:"Phainon",element:"Physical",path:"Destruction",version:"3.X",faction:"Amphoreus",image:"Character_Phainon_Icon.webp"},
+      {name:"Qingque",element:"Quantum",path:"Erudition",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Qingque_Icon.webp"},
+      {name:"Rappa",element:"Imaginary",path:"Destruction",version:"2.X",faction:"Penacony",image:"Character_Rappa_Icon.webp"},
+      {name:"Robin",element:"Physical",path:"Harmony",version:"2.X",faction:"Penacony",image:"Character_Robin_Icon.webp"},
+      {name:"Ruan Mei",element:"Ice",path:"Harmony",version:"1.X",faction:"Herta Space Station",image:"Character_Ruan_Mei_Icon.webp"},
+      {name:"Saber",element:"Wind",path:"Destruction",version:"3.X",faction:"Unknown",image:"Character_Saber_Icon.webp"},
+      {name:"Sampo",element:"Wind",path:"Nihility",version:"1.X",faction:"Belobog",image:"Character_Sampo_Icon.webp"},
+      {name:"Seele",element:"Quantum",path:"The Hunt",version:"1.X",faction:"Belobog-Underworld",image:"Character_Seele_Icon.webp"},
+      {name:"Serval",element:"Lightning",path:"Erudition",version:"1.X",faction:"Belobog-Landau Family",image:"Character_Serval_Icon.webp"},
+      {name:"Silver Wolf",element:"Quantum",path:"Nihility",version:"1.X",faction:"Stellaron Hunters",image:"Character_Silver_Wolf_Icon.webp"},
+      {name:"Sparkle",element:"Quantum",path:"Harmony",version:"2.X",faction:"Cosmics",image:"Character_Sparkle_Icon.webp"},
+      {name:"Stelle (Destruction)",element:"Physical",path:"Destruction",version:"1.X",faction:"Astral Express",image:"Character_Stelle_(Destruction)_Icon.webp"},
+      {name:"Stelle (Preservation)",element:"Fire",path:"Preservation",version:"1.X",faction:"Astral Express",image:"Character_Stelle_(Preservation)_Icon.webp"},
+      {name:"Stelle (Harmony)",element:"Imaginary",path:"Harmony",version:"1.X",faction:"Astral Express",image:"Character_Stelle_(Harmony)_Icon.webp"},
+      {name:"Stelle (Remembrance)",element:"Ice",path:"Remembrance",version:"1.X",faction:"Astral Express",image:"Character_Stelle_(Remembrance)_Icon.webp"},
+      {name:"Sunday",element:"Imaginary",path:"Harmony",version:"2.X",faction:"Penacony",image:"Character_Sunday_Icon.webp"},
+      {name:"Sushang",element:"Physical",path:"The Hunt",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Sushang_Icon.webp"},
+      {name:"The Herta",element:"Ice",path:"Erudition",version:"3.X",faction:"Herta Space Station",image:"Character_The_Herta_Icon.webp"},
+      {name:"Tingyun",element:"Lightning",path:"Harmony",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Tingyun_Icon.webp"},
+      {name:"Topaz",element:"Fire",path:"The Hunt",version:"1.X",faction:"IPC-Penacony",image:"Character_Topaz_&_Numby_Icon.webp"},
+      {name:"Tribbie",element:"Quantum",path:"Harmony",version:"3.X",faction:"Amphoreus",image:"Character_Tribbie_Icon.webp"},
+      {name:"Welt",element:"Imaginary",path:"Nihility",version:"1.X",faction:"Astral Express",image:"Character_Welt_Icon.webp"},
+      {name:"Xueyi",element:"Quantum",path:"Destruction",version:"1.X",faction:"Xianzhou Luofu-Ten Lords Commission",image:"Character_Xueyi_Icon.webp"},
+      {name:"Yanqing",element:"Ice",path:"The Hunt",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Yanqing_Icon.webp"},
+      {name:"Yukong",element:"Imaginary",path:"Harmony",version:"1.X",faction:"Xianzhou Luofu",image:"Character_Yukong_Icon.webp"},
+      {name:"Yunli",element:"Physical",path:"Destruction",version:"2.X",faction:"Xianzhou Luofu",image:"Character_Yunli_Icon.webp"},
+    ];
+
+      // State
+      let eliminatedSet = new Set();
+      let currentFiltered = characters.slice(); // list yang sedang ditampilkan (dipakai render ulang)
+
+      // Elemen DOM
+        const board = document.getElementById("board");
+        const countDisplay = document.getElementById("count");
+
+        // Fungsi untuk menampilkan semua karakter ke papan
+        function displayCharacters(list) {
+          board.innerHTML = "";
+          list.forEach(char => {
+            const card = document.createElement("div");
+            card.classList.add("card");
+            card.innerHTML = `
+              <img src="${char.image}" alt="${char.name}">
+              <p class="card-name">${char.name}</p>
+            `;
+
+            // Tambahkan event klik untuk eliminasi
+            card.addEventListener("click", () => {
+              card.classList.toggle("eliminated");
+              updateCount();
+            });
+
+            board.appendChild(card);
+          });
+
+          updateCount();
+        }
+
+        // Hitung sisa karakter yang belum dieliminasi
+        function updateCount() {
+          const total = document.querySelectorAll(".card").length;
+          const eliminated = document.querySelectorAll(".card.eliminated").length;
+          countDisplay.textContent = `Tersisa: ${total - eliminated} / ${total}`;
+        }
+
+        // Fitur filter
+        function applyFilter() {
+          const path = document.getElementById("pathFilter").value;
+          const element = document.getElementById("elementFilter").value;
+          const faction = document.getElementById("factionFilter").value;
+          const versions = Array.from(document.querySelectorAll(".verFilter:checked")).map(v => v.value);
+
+          const filtered = characters.filter(c =>
+            (path === "" || c.path === path) &&
+            (element === "" || c.element === element) &&
+            (faction === "" || c.faction === faction) &&
+            (versions.length === 0 || versions.includes(c.version))
+          );
+
+          displayCharacters(filtered);
+        }
+
+        // Pilih karakter acak untuk pemain
+        function generateCharacter() {
+          const random = characters[Math.floor(Math.random() * characters.length)];
+          document.getElementById("charImg").src = random.image;
+          document.getElementById("charName").textContent = random.name;
+          document.getElementById("charElement").textContent = random.element;
+          document.getElementById("charPath").textContent = random.path;
+          document.getElementById("charFaction").textContent = random.faction;
+          document.getElementById("charRelease").textContent = random.version;
+
+          displayCharacters(characters);
+        }
+
+        // Jalankan awal
+        generateCharacter();
+    </script>
+  </body>
+</html>
