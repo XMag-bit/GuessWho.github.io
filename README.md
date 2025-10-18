@@ -1,17 +1,8 @@
-Oke, berikut versi final yang sudah **siap dijadikan file `README.md` GitHub**, dengan format markdown lengkap, visual emoji menarik, dan tambahan **badge profesional** seperti proyek open-source populer 💫
-
-Kamu tinggal salin ini ke file bernama **`README.md`** di repositorimu 👇
-
----
-
-````markdown
 # 🎮 **Guess Who: Multiverse Edition**
 
 > *“Satu game, lima dunia. Siapa yang bisa kamu tebak sebelum semua tertutup?”*
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/xmag-bit/GuessWho.github.io?style=for-the-badge&color=ffce00)
-![GitHub forks](https://img.shields.io/github/forks/xmag-bit/GuessWho.github.io?style=for-the-badge&color=00c8ff)
-![GitHub license](https://img.shields.io/github/license/xmag-bit/GuessWho.github.io?style=for-the-badge&color=7fff00)
 ![Status](https://img.shields.io/badge/Status-Online-brightgreen?style=for-the-badge)
 
 Selamat datang di **Guess Who: Multiverse Edition** —  
@@ -118,7 +109,3 @@ Inspirasi dari berbagai dunia — satu tempat untuk semua gamer.
 👉 [https://xmag-bit.github.io/GuessWho.github.io/](https://xmag-bit.github.io/GuessWho.github.io/)
 
 ---
-
-
-Apakah kamu mau saya tambahkan **preview image (screenshot banner game)** di bagian atas README (di bawah judul)? Itu akan membuat halaman GitHub-mu terlihat lebih profesional seperti proyek game open source besar.
-```
